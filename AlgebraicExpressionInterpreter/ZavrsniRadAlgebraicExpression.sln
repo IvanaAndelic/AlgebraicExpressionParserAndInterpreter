@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI", "GUI\GUI.csproj", "{1A3126D9-8AD9-4E67-A9C2-06FCE1561321}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgebraicExpressionParser", "AlgebraicExpressionParser\AlgebraicExpressionParser.csproj", "{3CE5A057-A321-4500-89FB-761D58631E69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{1A3126D9-8AD9-4E67-A9C2-06FCE1561321}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A3126D9-8AD9-4E67-A9C2-06FCE1561321}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A3126D9-8AD9-4E67-A9C2-06FCE1561321}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CE5A057-A321-4500-89FB-761D58631E69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CE5A057-A321-4500-89FB-761D58631E69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CE5A057-A321-4500-89FB-761D58631E69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CE5A057-A321-4500-89FB-761D58631E69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
