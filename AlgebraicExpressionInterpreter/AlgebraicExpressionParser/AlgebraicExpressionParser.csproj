@@ -44,5 +44,11 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AlgebraicExpressionInterpreter\AlgebraicExpressionInterpreter.csproj">
+      <Project>{a0a52273-7401-400e-914a-4ebe378054c7}</Project>
+      <Name>AlgebraicExpressionInterpreter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
