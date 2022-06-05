@@ -7,31 +7,40 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionParser
 {
-    public class Parser:IExpression
+    public class Parser
     {
 
         enum ExpressionParserState
         {
             SkippingWhiteSpacesBeforeOperator,
             SkippingWhiteSpacesAfterOperator,
-            ReadingOperator, 
-            ReadingConstant, 
-            ReadingVariable, 
+            ReadingOperator,
+            ReadingConstant,
+            ReadingVariable,
             ReadingMathFunction
         }
         enum Sign
         {
-            Positive, 
+            Positive,
             Negative
         }
 
-        static void Parse(string expression)
+        enum Operator
+        {
+            Addition,
+            Subtraction,
+            Multiplication,
+            Division
+        }
+
+        public IExpression Parse(string expression) //vraca izraz iexpression
         {
             ExpressionParserState state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
             Sign currentSign = Sign.Positive;
             List<IExpression> expressionList = new List<IExpression>();
+            List<Operator> operators = new List<Operator>();
 
-            for(int i = 0; i < expression.Length; ++i)
+            for (int i = 0; i < expression.Length; ++i)
             {
                 switch (state)
                 {
@@ -54,6 +63,30 @@ namespace AlgebraicExpressionParser
                         }
                         state = GetNextState(expression, i);
                         break;
+                    case ExpressionParserState.SkippingWhiteSpacesBeforeOperator:
+                        i = SkipWhiteSpaces(expression, i);
+                        switch (expression[i])
+                        {
+                            case '+':
+                                operators.Add(Operator.Addition);
+                                break;
+                            case '-':
+                                operators.Add(Operator.Subtraction);
+                                break;
+                            case '*':
+                                operators.Add(Operator.Multiplication);
+                                break;
+                            case '/':
+                                operators.Add(Operator.Division);
+                                break;
+                            default:
+                                throw new Exception($"Invalid operator on position {i}");
+
+                        }
+                        ++i;
+                        state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
+                        break;
+
 
                     case ExpressionParserState.ReadingVariable:
                         //TODO: create VariableX and add it to object list (take care of current sign) 
@@ -61,60 +94,110 @@ namespace AlgebraicExpressionParser
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
                         break;
                     case ExpressionParserState.ReadingConstant:
-                        int end = ReadConstant(expression, i);
+                        var constant = ReadConstant(expression, ref i);
                         //TODO:create constantExpression and add it to object list (take care of current sign)
-                        expressionList.Add(new Constant(expression.Substring(i, end - i)));
-                        i = end;
+                        expressionList.Add(constant);
+
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
                         break;
-                        
+                    case ExpressionParserState.ReadingMathFunction:
+                        var fun = ReadFunction(expression, ref i);
+                        expressionList.Add(fun);
+                        break;
+
 
                 }
 
             }
+            return null;
         }
 
-        private static int ReadConstant(string expression, int i)
+        private IExpression ReadFunction(string expression, ref int i)
         {
+            //TODO: identify function and initialize delegate MathFunction.Fun
+
+
+            MathFunction.Fun fun = null;
+            int start = i;
+            string funName = expression.Substring(start, i - start);
+            switch (funName)
+            {
+                case "sin":
+
+                    i += 3;
+                    fun = Math.Sin;
+                    break;
+                
+                case "cos":
+
+                    i += 3;
+                    fun = Math.Cos;
+                    break;
+            }
+
+            //TODO: parse expression inside parenthesis
+            start = i;
+            int end = 100; //TODO find position of right parenthesis
+            IExpression expr = Parse(expression.Substring(start, end - start));
+
+            return new MathFunction(fun, expr);
+            //while (char.IsLetter(expression[i]))
+            //{
+            //   switch (expression[i])
+            //    {
+            //        case 's':
+            //            return new MathFunction(Math.Sin, new VariableX());
+            //           return
+            //        case 'c':
+            //            return new MathFunction(Math.Cos, new VariableX());
+            //    }
+
+            //}
+        }
+
+        private IExpression ReadConstant(string expression, ref int i)
+        {
+            int start = i;
             int decimalSeparator = 0;
-           while(char.IsDigit(expression[i]) || expression[i] == '.')
+            while (char.IsDigit(expression[i]) || expression[i] == '.')
             {
                 if (expression[i] == '.')
                 {
                     ++decimalSeparator;
                     if (decimalSeparator > 1)
-                        throw Exception();
+                        throw new Exception();
                 }
                 ++i;
             }
-            return i;
+            return new Constant(double.Parse(expression.Substring(start, i - start)));
         }
 
-        private static ExpressionParserState GetNextState(string expression, int i)
+        private ExpressionParserState GetNextState(string expression, int i)
         {
 
             if (expression[i] == 'x')
             {
                 return ExpressionParserState.ReadingVariable;
             }
-            else if ((expression[i]>='A' && expression[i]<='Z')||(expression[i]>='a' && expression[i] <= 'z'))
+            else if ((expression[i] >= 'A' && expression[i] <= 'Z') || (expression[i] >= 'a' && expression[i] <= 'z'))
             {
                 return ExpressionParserState.ReadingMathFunction;
-            }else if (char.IsDigit(expression[i]))
+            }
+            else if (char.IsDigit(expression[i]))
             {
                 return ExpressionParserState.ReadingConstant;
             }
             throw new Exception("Invalid expression"); //TODO: napraviti svoju iznimku
-            
+
         }
 
-        private static int SkipWhiteSpaces(string expression, int i)
+        private int SkipWhiteSpaces(string expression, int i)
         {
-            while(expression[i]==' ')
+            while (expression[i] == ' ')
             {
                 ++i;
             }
-            
+
             return i;
         }
     }
