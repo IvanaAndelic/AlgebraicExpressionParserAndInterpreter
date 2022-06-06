@@ -127,17 +127,45 @@ namespace AlgebraicExpressionParser
                     i += 3;
                     fun = Math.Sin;
                     break;
-                
                 case "cos":
-
                     i += 3;
                     fun = Math.Cos;
                     break;
+                case "tan":
+                    i += 3;
+                    fun = Math.Tan;
+                    break;
+                case "sqrt":
+                    i += 4;
+                    fun = Math.Sqrt;
+                    break;
+                case "ln":
+                    i += 2;
+                    fun = Math.Log;
+                    break;
+                case "log":
+                    i += 3;
+                    fun = Math.Log10;
+                    break;
+                case "asin":
+                    i += 4;
+                    fun = Math.Asin;
+                    break;
+                case "acos":
+                    i += 4;
+                    fun = Math.Acos;
+                    break;
+                case "atan":
+                    i += 4;
+                    fun = Math.Atan;
+                    break;
+
+
             }
 
             //TODO: parse expression inside parenthesis
             start = i;
-            int end = 100; //TODO find position of right parenthesis
+            int end = findPositionOfRightParenthesis(start, expression); //TODO find position of right parenthesis
             IExpression expr = Parse(expression.Substring(start, end - start));
 
             return new MathFunction(fun, expr);
@@ -153,6 +181,18 @@ namespace AlgebraicExpressionParser
             //    }
 
             //}
+        }
+
+        private int findPositionOfRightParenthesis(int start, string expression)
+        {
+            int i = start;
+            while (expression[i] != ')')
+            {
+                ++i;
+            }
+
+            return i;
+           
         }
 
         private IExpression ReadConstant(string expression, ref int i)
