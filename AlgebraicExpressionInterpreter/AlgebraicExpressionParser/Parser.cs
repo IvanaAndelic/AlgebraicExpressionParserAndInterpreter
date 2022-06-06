@@ -7,6 +7,13 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionParser
 {
+
+    class ExceptionInvalidExpression : Exception 
+    {
+        public ExceptionInvalidExpression(string message)
+            : base(message) { }
+
+    }
     public class Parser
     {
 
@@ -61,7 +68,14 @@ namespace AlgebraicExpressionParser
                                 currentSign = Sign.Positive;
                                 break;
                         }
-                        state = GetNextState(expression, i);
+                        try
+                        {
+                            state = GetNextState(expression, i);
+                          
+                        }catch(ExceptionInvalidExpression e)
+                        {
+                            Console.WriteLine("ExceptionInvalidExpression: {0}", e.Message);
+                        }
                         break;
                     case ExpressionParserState.SkippingWhiteSpacesBeforeOperator:
                         i = SkipWhiteSpaces(expression, i);
@@ -227,7 +241,7 @@ namespace AlgebraicExpressionParser
             {
                 return ExpressionParserState.ReadingConstant;
             }
-            throw new Exception("Invalid expression"); //TODO: napraviti svoju iznimku
+            throw new ExceptionInvalidExpression("Invalid expression"); // napraviti svoju iznimku
 
         }
 
