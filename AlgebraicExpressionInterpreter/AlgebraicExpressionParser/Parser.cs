@@ -123,7 +123,12 @@ namespace AlgebraicExpressionParser
                 }
 
             }
-            return null;
+            return CreateFinalExpression(expressionList, operators);
+        }
+
+        private IExpression CreateFinalExpression(List<IExpression> expressionList, List<Operator> operators)
+        {
+            
         }
 
         private IExpression ReadFunction(string expression, ref int i)
@@ -183,18 +188,6 @@ namespace AlgebraicExpressionParser
             IExpression expr = Parse(expression.Substring(start, end - start));
 
             return new MathFunction(fun, expr);
-            //while (char.IsLetter(expression[i]))
-            //{
-            //   switch (expression[i])
-            //    {
-            //        case 's':
-            //            return new MathFunction(Math.Sin, new VariableX());
-            //           return
-            //        case 'c':
-            //            return new MathFunction(Math.Cos, new VariableX());
-            //    }
-
-            //}
         }
 
         private int findPositionOfRightParenthesis(int start, string expression)
