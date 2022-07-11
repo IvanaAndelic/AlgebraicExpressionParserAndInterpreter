@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace AlgebraicExpressionParser
 {
 
-    class ExceptionInvalidExpression : Exception 
+    class InvalidExpressionException : Exception
     {
-        public ExceptionInvalidExpression(string message)
+        public InvalidExpressionException(string message)
             : base(message) { }
 
     }
     public class Parser
     {
 
-        enum ExpressionParserState
+        public enum ExpressionParserState
         {
             SkippingWhiteSpacesBeforeOperator,
             SkippingWhiteSpacesAfterOperator,
@@ -32,20 +32,60 @@ namespace AlgebraicExpressionParser
             Negative
         }
 
-        enum Operator
+        public enum Operator
         {
             Addition,
             Subtraction,
             Multiplication,
-            Division
+            Division,
+            LeftParenthesis,
+            Function,
+            Sin = Function,
+            Cos,
+            Tan,
+            Sqrt,
+            Ln,
+            Log,
+            Asin,
+            Acos,
+            Atan
         }
+        //popuniti
+        Dictionary<Operator, MathFunction.Fun> functionMap = new Dictionary<Operator, MathFunction.Fun> { { Operator.Sin, Math.Sin }, { Operator.Cos, Math.Cos } };
+        Dictionary<Operator, int> precedence = new Dictionary<Operator, int> { { Operator.Addition, 1 }, { Operator.Subtraction, 1 }, { Operator.Multiplication, 2 }, { Operator.Division, 2 } };
+        Queue<Operator> outputQueue = new Queue<Operator>();
+        Stack<Operator> operators = new Stack<Operator>();
+        private void ProccessOperators(Operator current)
+        {
+            while (operators.Count > 0 && operators.Peek() != Operator.LeftParenthesis && precedence[operators.Peek()] >= precedence[current])
+            {
 
+                var topOperator = operators.Pop();
+                outputQueue.Enqueue(topOperator);
+            }
+            operators.Push(current);
+        }
+        // a right parenthesis(i.e. ")"):
+        //while the operator at the top of the operator stack is not a left parenthesis:
+        //    { assert the operator stack is not empty}
+        //    /* If the stack runs out without finding a left parenthesis, then there are mismatched parentheses. */
+        //    pop the operator from the operator stack into the output queue
+        //{ assert there is a left parenthesis at the top of the operator stack}
+        //    pop the left parenthesis from the operator stack and discard it
+        //if there is a function token at the top of the operator stack, then:
+        //    pop the function from the operator stack into the output queue
+        private bool IsNotLeftParentheses()
+        {
+            if (operators.Count == 0)
+                throw new InvalidExpressionException("Mismatched parentheses");
+
+            return operators.Peek() != Operator.LeftParenthesis;
+        }
         public IExpression Parse(string expression) //vraca izraz iexpression
         {
             ExpressionParserState state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
             Sign currentSign = Sign.Positive;
-            List<IExpression> expressionList = new List<IExpression>();
-            List<Operator> operators = new List<Operator>();
+
 
             for (int i = 0; i < expression.Length; ++i)
             {
@@ -71,138 +111,169 @@ namespace AlgebraicExpressionParser
                         try
                         {
                             state = GetNextState(expression, i);
-                          
-                        }catch(ExceptionInvalidExpression e)
+                        }
+                        catch (InvalidExpressionException e)
                         {
                             Console.WriteLine("ExceptionInvalidExpression: {0}", e.Message);
                         }
                         break;
                     case ExpressionParserState.SkippingWhiteSpacesBeforeOperator:
                         i = SkipWhiteSpaces(expression, i);
+
                         switch (expression[i])
                         {
+                            //while (
+                            //    there is an operator o2 other than the left parenthesis at the top
+                            //    of the operator stack, and(o2 has greater precedence than o1
+                            //    or they have the same precedence and o1 is left - associative)
+                            //):
+                            //    pop o2 from the operator stack into the output queue
+                            //push o1 onto the operator stack
                             case '+':
-                                operators.Add(Operator.Addition);
+                                ProccessOperators(Operator.Addition);
                                 break;
                             case '-':
-                                operators.Add(Operator.Subtraction);
+                                ProccessOperators(Operator.Subtraction);
                                 break;
                             case '*':
-                                operators.Add(Operator.Multiplication);
+                                ProccessOperators(Operator.Multiplication);
                                 break;
                             case '/':
-                                operators.Add(Operator.Division);
+                                ProccessOperators(Operator.Division);
+                                break;
+                            // a left parenthesis(i.e. "("):
+                            //push it onto the operator stack
+                            case '(':
+                                operators.Push(Operator.LeftParenthesis);
+                                break;
+                            // a right parenthesis(i.e. ")"):
+                            //while the operator at the top of the operator stack is not a left parenthesis:
+                            //    { assert the operator stack is not empty}
+                            //    /* If the stack runs out without finding a left parenthesis, then there are mismatched parentheses. */
+                            //    pop the operator from the operator stack into the output queue
+                            //{ assert there is a left parenthesis at the top of the operator stack}
+                            //    pop the left parenthesis from the operator stack and discard it
+                            //if there is a function token at the top of the operator stack, then:
+                            //    pop the function from the operator stack into the output queue
+                            case ')':
+                                while (IsNotLeftParentheses())
+                                {
+                                    var topOperator = operators.Pop();
+                                    outputQueue.Enqueue(topOperator);
+                                }
+                                operators.Pop();
+                                if (operators.Count > 0 && operators.Peek() >= Operator.Function)
+                                {
+                                    outputQueue.Enqueue(operators.Pop());
+                                }
                                 break;
                             default:
                                 throw new Exception($"Invalid operator on position {i}");
-
                         }
                         ++i;
                         state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
                         break;
-
-
                     case ExpressionParserState.ReadingVariable:
                         //TODO: create VariableX and add it to object list (take care of current sign) 
-                        expressionList.Add(new VariableX());
+                        //expressionQueue.Enqueue(new VariableX());
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
                         break;
                     case ExpressionParserState.ReadingConstant:
                         var constant = ReadConstant(expression, ref i);
                         //TODO:create constantExpression and add it to object list (take care of current sign)
-                        expressionList.Add(constant);
-
+                        //expressionQueue.Enqueue(constant);
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
                         break;
                     case ExpressionParserState.ReadingMathFunction:
                         var fun = ReadFunction(expression, ref i);
-                        expressionList.Add(fun);
+                        //expressionQueue.Enqueue(fun);
+                        operators.Push(fun);
                         break;
-
-
                 }
-
             }
-            return CreateFinalExpression(expressionList, operators);
+            //while there are tokens on the operator stack:
+            ///* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
+            //{ assert the operator on top of the stack is not a(left) parenthesis}
+            //pop the operator from the operator stack onto the output queue
+            while (operators.Count > 0)
+            {
+                var topOperator = operators.Pop();
+                if (topOperator == Operator.LeftParenthesis)
+                    throw new InvalidExpressionException("Mismatched parentheses");
+                outputQueue.Enqueue(topOperator);
+            }
+
+
+            return CreateFinalExpression(state, outputQueue);
         }
 
-        private IExpression CreateFinalExpression(List<IExpression> expressionList, List<Operator> operators)
+        public IExpression CreateFinalExpression(ExpressionParserState state, Queue<Operator> expressionQueue)
         {
-            
-        }
+            //foreach (IExpression expression in expressionQueue)
+            //{
 
-        private IExpression ReadFunction(string expression, ref int i)
+            //}
+            return null;
+        }
+        public Operator ReadFunction(string expression, ref int i)
         {
             //TODO: identify function and initialize delegate MathFunction.Fun
 
 
-            MathFunction.Fun fun = null;
+            //MathFunction.Fun fun = null;
             int start = i;
             string funName = expression.Substring(start, i - start);
             switch (funName)
             {
                 case "sin":
-
                     i += 3;
-                    fun = Math.Sin;
-                    break;
+                    return Operator.Sin;
                 case "cos":
                     i += 3;
-                    fun = Math.Cos;
+                    // fun = Math.Cos;
                     break;
                 case "tan":
                     i += 3;
-                    fun = Math.Tan;
+                    // fun = Math.Tan;
                     break;
                 case "sqrt":
                     i += 4;
-                    fun = Math.Sqrt;
+                    // fun = Math.Sqrt;
                     break;
                 case "ln":
                     i += 2;
-                    fun = Math.Log;
+                    // fun = Math.Log;
                     break;
                 case "log":
                     i += 3;
-                    fun = Math.Log10;
+                    // fun = Math.Log10;
                     break;
                 case "asin":
                     i += 4;
-                    fun = Math.Asin;
+                    //fun = Math.Asin;
                     break;
                 case "acos":
                     i += 4;
-                    fun = Math.Acos;
+                    // fun = Math.Acos;
                     break;
                 case "atan":
                     i += 4;
-                    fun = Math.Atan;
+                    // fun = Math.Atan;
                     break;
-
-
             }
-
-            //TODO: parse expression inside parenthesis
-            start = i;
-            int end = findPositionOfRightParenthesis(start, expression); //TODO find position of right parenthesis
-            IExpression expr = Parse(expression.Substring(start, end - start));
-
-            return new MathFunction(fun, expr);
+            throw new InvalidExpressionException("Unknown function");
         }
 
-        private int findPositionOfRightParenthesis(int start, string expression)
+        public int FindPositionOfRightParenthesis(int start, string expression)
         {
             int i = start;
             while (expression[i] != ')')
             {
                 ++i;
             }
-
             return i;
-           
         }
-
-        private IExpression ReadConstant(string expression, ref int i)
+        public IExpression ReadConstant(string expression, ref int i)
         {
             int start = i;
             int decimalSeparator = 0;
@@ -219,7 +290,7 @@ namespace AlgebraicExpressionParser
             return new Constant(double.Parse(expression.Substring(start, i - start)));
         }
 
-        private ExpressionParserState GetNextState(string expression, int i)
+        public ExpressionParserState GetNextState(string expression, int i)
         {
 
             if (expression[i] == 'x')
@@ -234,18 +305,19 @@ namespace AlgebraicExpressionParser
             {
                 return ExpressionParserState.ReadingConstant;
             }
-            throw new ExceptionInvalidExpression("Invalid expression"); // napraviti svoju iznimku
+            throw new InvalidExpressionException("Invalid expression"); // napraviti svoju iznimku
 
         }
 
-        private int SkipWhiteSpaces(string expression, int i)
+        public int SkipWhiteSpaces(string expression, int i)
         {
             while (expression[i] == ' ')
             {
                 ++i;
             }
-
             return i;
         }
     }
 }
+
+
