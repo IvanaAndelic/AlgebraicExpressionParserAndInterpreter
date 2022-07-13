@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class DivideExpression
+    public class DivideExpression : IExpression
     {
         private readonly IExpression left;
         private readonly IExpression right;
@@ -19,15 +19,7 @@ namespace AlgebraicExpressionInterpreter
 
         public double Interpret(Context context)
         {
-            if (right.Interpret(context) > 0)
-            {
-                return left.Interpret(context) / right.Interpret(context);
-            }
-            else
-            {
-                return 0;
-            }
-
+            return left.Interpret(context) / right.Interpret(context);
         }
     }
 }

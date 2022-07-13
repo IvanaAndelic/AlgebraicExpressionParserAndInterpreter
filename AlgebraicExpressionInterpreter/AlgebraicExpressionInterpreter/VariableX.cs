@@ -8,9 +8,19 @@ namespace AlgebraicExpressionInterpreter
 {
     public class VariableX : IExpression
     {
+        public VariableX(bool isPositive = true)
+        {
+            this.isPositive = isPositive;
+        }
         public double Interpret(Context context)
         {
-            return context.X;
+            if (isPositive)
+            { 
+                return context.X;
+            }
+            return -context.X;
         }
+
+        private readonly bool isPositive;
     }
 }

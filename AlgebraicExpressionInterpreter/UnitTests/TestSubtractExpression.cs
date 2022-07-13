@@ -15,8 +15,8 @@ namespace UnitTests
         [TestMethod]
         public void SubtractExpressionInterpretForTwoConstantsReturnsTheirDifference()
         {
-            Constant left = new Constant("16");
-            Constant right = new Constant("4");
+            Constant left = new Constant(16);
+            Constant right = new Constant(4);
             SubtractExpression difference = new SubtractExpression(left, right);
 
             Context context = new Context(5);
@@ -27,7 +27,7 @@ namespace UnitTests
         public void SubtractExpressionInterpretForConstantsAndVariableReturnsTheirDifference()
         {
             IExpression left = new VariableX();
-            IExpression right = new Constant("5");
+            IExpression right = new Constant(5);
             SubtractExpression difference = new SubtractExpression(left, right);
 
             Context context = new Context(3);

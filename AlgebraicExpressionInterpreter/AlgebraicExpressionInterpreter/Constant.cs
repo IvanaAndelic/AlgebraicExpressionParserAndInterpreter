@@ -8,12 +8,7 @@ namespace AlgebraicExpressionInterpreter
 {
     public class Constant : IExpression
     {
-        private double value;
-
-        public Constant(string value)
-        {
-            this.value = double.Parse(value);
-        }
+        private readonly double value;
 
         public Constant(double value)
         {

@@ -14,8 +14,8 @@ namespace UnitTests
         [TestMethod]
         public void SumExpressionInterpretForTwoConstantsReturnsTheirSum()
         {
-            Constant left = new Constant("23");
-            Constant right = new Constant("2");
+            Constant left = new Constant(23);
+            Constant right = new Constant(2);
             SumExpression sum = new SumExpression(left, right);
 
             Context context = new Context(3);
@@ -26,7 +26,7 @@ namespace UnitTests
         public void SumExpressionInterpretForConstantsAndVariableReturnsTheirSum()
         {
             IExpression left = new VariableX();
-            IExpression right = new Constant("2");
+            IExpression right = new Constant(2);
             SumExpression sum = new SumExpression(left, right);
 
             Context context = new Context(3);

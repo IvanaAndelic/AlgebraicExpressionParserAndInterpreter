@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class SubtractExpression
+    public class SubtractExpression : IExpression
     {
         private readonly IExpression left;
         private readonly IExpression right;

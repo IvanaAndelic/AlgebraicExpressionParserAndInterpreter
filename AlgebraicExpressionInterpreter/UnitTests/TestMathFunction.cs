@@ -12,9 +12,9 @@ namespace UnitTests
         {
             IExpression piHalf = new Constant(Math.PI / 2.0);
             IExpression mathFun = new MathFunction(Math.Sin, piHalf);
-            //Assert.AreEqual(1.0, mathFun.Interpret(new Context(3)), 1e-5);
-            Assert.AreEqual(1.0 / 3, 1.0 - 2.0 / 3, 1e-10);
+            Assert.AreEqual(1.0, mathFun.Interpret(new Context(3)), 1e-5);
         }
+
         [TestMethod]
         public void MathFunctionOfSinReturns0ForPiConstant()
         {
@@ -22,7 +22,6 @@ namespace UnitTests
             IExpression mathFun = new MathFunction(Math.Sin, x);
             Assert.AreEqual(0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
         }
-
 
         [TestMethod]
         public void MathFunctionOfSqrtReturnsCorrectValueFor2()
@@ -43,7 +42,6 @@ namespace UnitTests
         }
 
         [TestMethod]
-
         public void MathFunctionOfCosReturnsMinus1ForPiConstant()
         {
             IExpression pi = new Constant(Math.PI);
@@ -76,7 +74,5 @@ namespace UnitTests
             IExpression cosFun = new MathFunction(Math.Cos, sqrtFun);
             Assert.AreEqual(Math.Sqrt(2), cosFun.Interpret(new Context(2)));
         }
-
     }
-
 }
