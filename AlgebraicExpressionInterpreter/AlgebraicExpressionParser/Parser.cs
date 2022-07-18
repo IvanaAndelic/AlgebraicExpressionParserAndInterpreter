@@ -88,23 +88,27 @@ namespace AlgebraicExpressionParser
         //):
         //    pop o2 from the operator stack into the output queue
         //push o1 onto the operator stack
+        private void ProcessTopOperator()
+        {
+            var topOperator = operators.PopBack();
+            if (topOperator > Operator.Functions)
+            {
+                var operand = output.PopBack();
+                var fun = functionMap[topOperator];
+                output.PushBack(new MathFunction(fun, operand));
+            }
+            else
+            {
+                var rhs = output.PopBack();
+                var lhs = output.PopBack();
+                output.PushBack(EvaluateOperation(topOperator, lhs, rhs));
+            }
+        }
         private void ProccessOperator(Operator current)
         {
             while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(current))
             {
-                var topOperator = operators.PopBack();
-                if (topOperator > Operator.Functions)
-                {
-                    var operand = output.PopBack();
-                    var fun = functionMap[topOperator];
-                    output.PushBack(new MathFunction(fun, operand));
-                }
-                else
-                {
-                    var rhs = output.PopBack();
-                    var lhs = output.PopBack();
-                    output.PushBack(EvaluateOperation(topOperator, lhs, rhs));
-                }
+                ProcessTopOperator();
             }
             operators.PushBack(current);
         }
@@ -144,19 +148,7 @@ namespace AlgebraicExpressionParser
         {
             while (IsNotLeftParenthesis())
             {
-                var topOperator = operators.PopBack();
-                if (topOperator > Operator.Functions)
-                {
-                    var argument = output.PopBack();
-                    var fun = functionMap[topOperator];
-                    output.PushBack(new MathFunction(fun, argument));
-                }
-                else
-                {
-                    var rhs = output.PopBack();
-                    var lhs = output.PopBack();
-                    output.PushBack(EvaluateOperation(topOperator, lhs, rhs));
-                }
+                ProcessTopOperator();
             }
             // Pop the left parenthesis from the operator stack and discard it.
             operators.PopBack();
