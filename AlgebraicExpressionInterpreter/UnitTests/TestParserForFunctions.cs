@@ -28,6 +28,7 @@ namespace UnitTests
         {
             Parser parser = new Parser();
             Assert.AreEqual(1, parser.Parse("sin(x + 1)").Interpret(new Context(0.5707963267948966192313216916398)), 1e-10);
+            Assert.AreEqual(3, parser.Parse("sqrt(11 - x * 2)").Interpret(new Context(1)), 1e-10);
         }
 
         [TestMethod]

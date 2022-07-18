@@ -78,9 +78,20 @@ namespace AlgebraicExpressionParser
         }
 
         private readonly Deque<Operator> operators = new Deque<Operator>();
-
         private readonly Deque<IExpression> output = new Deque<IExpression>();
 
+        private IExpression EvaluateOperator(Operator op)
+        {
+            if (op > Operator.Functions)
+            {
+                var operand = output.PopBack();
+                var fun = functionMap[op];
+                return new MathFunction(fun, operand);
+            }
+            var rhs = output.PopBack();
+            var lhs = output.PopBack();
+            return EvaluateBinaryOperation(op, lhs, rhs);
+        }
         //while (
         //    there is an operator o2 other than the left parenthesis at the top
         //    of the operator stack, and(o2 has greater precedence than o1
@@ -88,52 +99,24 @@ namespace AlgebraicExpressionParser
         //):
         //    pop o2 from the operator stack into the output queue
         //push o1 onto the operator stack
-        private void ProcessTopOperator()
+        private void ProccessOperator(Operator op)
         {
-            var topOperator = operators.PopBack();
-            if (topOperator > Operator.Functions)
+            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(op))
             {
-                var operand = output.PopBack();
-                var fun = functionMap[topOperator];
-                output.PushBack(new MathFunction(fun, operand));
+                output.PushBack(EvaluateOperator(operators.PopBack()));
             }
-            else
-            {
-                var rhs = output.PopBack();
-                var lhs = output.PopBack();
-                output.PushBack(EvaluateOperation(topOperator, lhs, rhs));
-            }
-        }
-        private void ProccessOperator(Operator current)
-        {
-            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(current))
-            {
-                ProcessTopOperator();
-            }
-            operators.PushBack(current);
+            operators.PushBack(op);
         }
 
-        private void CleanupOperators()
+        private void CleanupTopOperators()
         {
-            var lastOperator = operators.PopBack();
-            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) <= GetPrecedence(lastOperator))
+            var topOperator = operators.PopBack();
+            while (operators.Count > 0 && GetPrecedence(operators.PeekBack()) <= GetPrecedence(topOperator))
             {
-                if (lastOperator > Operator.Functions)
-                {
-                    var argument = output.PopBack();
-                    var fun = functionMap[lastOperator];
-                    output.PushBack(new MathFunction(fun, argument));
-                    return;
-                }
-                else
-                {
-                    var rhs = output.PopBack();
-                    var lhs = output.PopBack();
-                    output.PushBack(EvaluateOperation(lastOperator, lhs, rhs));
-                    lastOperator = operators.PopBack();
-                }
+                output.PushBack(EvaluateOperator(topOperator));
+                topOperator = operators.PopBack();
             }
-            operators.PushBack(lastOperator);
+            operators.PushBack(topOperator);
         }
 
         //while the operator at the top of the operator stack is not a left parenthesis:
@@ -148,7 +131,7 @@ namespace AlgebraicExpressionParser
         {
             while (IsNotLeftParenthesis())
             {
-                ProcessTopOperator();
+                output.PushBack(EvaluateOperator(operators.PopBack()));
             }
             // Pop the left parenthesis from the operator stack and discard it.
             operators.PopBack();
@@ -261,12 +244,17 @@ namespace AlgebraicExpressionParser
             // Process any operator with higher precedence at the end of expression
             if (operators.Count > 1 && GetPrecedence(operators.PeekBack()) > 1)
             {
-                CleanupOperators();
+                CleanupTopOperators();
             }
-            //while there are tokens on the operator stack:
-            ///* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
-            //{ assert the operator on top of the stack is not a(left) parenthesis}
-            //pop the operator from the operator stack onto the output queue
+            return FinalEvaluation();
+        }
+
+        //while there are tokens on the operator stack:
+        ///* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
+        //{ assert the operator on top of the stack is not a(left) parenthesis}
+        //pop the operator from the operator stack onto the output queue
+        private IExpression FinalEvaluation()
+        {
             var lhs = output.PopFront();
             while (operators.Count > 0)
             {
@@ -279,16 +267,17 @@ namespace AlgebraicExpressionParser
                 {
                     var fun = functionMap[topOperator];
                     lhs = new MathFunction(fun, lhs);
-                    output.PushBack(lhs);
-                    continue;
                 }
-                var rhs = output.PopFront();
-                lhs = EvaluateOperation(topOperator, lhs, rhs);
+                else
+                {
+                    var rhs = output.PopFront();
+                    lhs = EvaluateBinaryOperation(topOperator, lhs, rhs);
+                }
             }
             return lhs;
         }
 
-        private IExpression EvaluateOperation(Operator op, IExpression lhs, IExpression rhs)
+        private IExpression EvaluateBinaryOperation(Operator op, IExpression lhs, IExpression rhs)
         {
             switch (op)
             {
@@ -305,100 +294,99 @@ namespace AlgebraicExpressionParser
             return null;
         }
 
-        private void ReadFunction(string expression, ref int i)
+        private void ReadFunction(string expression, ref int pos)
         {
-            Operator fun = ResolveFunction(expression, ref i);
+            Operator fun = ResolveFunction(expression, ref pos);
             operators.PushBack(fun);
             // Function name must be followed by left parenthesis.
-            SkipWhiteSpaces(expression, ref i);
-            if (expression[i] != '(')
-                throw new InvalidExpressionException($"Function name not followed by left parenthesis at position {i + 1}");
+            if (expression[pos] != '(')
+                throw new InvalidExpressionException($"Function name not followed by left parenthesis at position {pos + 1}");
             operators.PushBack(Operator.LeftParenthesis);
-            ++i;
+            ++pos;
         }
 
-        private Operator ResolveFunction(string expression, ref int i)
+        private Operator ResolveFunction(string expression, ref int pos)
         {
-            string funName = expression.Substring(i);
+            string funName = expression.Substring(pos);
             if (funName.StartsWith("sin"))
             {
-                i += 3;
+                pos += 3;
                 return Operator.Sin;
             }
             if (funName.StartsWith("cos"))
             {
-                i += 3;
+                pos += 3;
                 return Operator.Cos;
             }
             if (funName.StartsWith("tan"))
             {
-                i += 3;
+                pos += 3;
                 return Operator.Tan;
             }
             if (funName.StartsWith("sqrt"))
             {
-                i += 4;
+                pos += 4;
                 return Operator.Sqrt;
             }
             if (funName.StartsWith("ln"))
             {
-                i += 2;
+                pos += 2;
                 return Operator.Ln;
             }
             if (funName.StartsWith("log"))
             {
-                i += 3;
+                pos += 3;
                 return Operator.Log;
             }
-            throw new InvalidExpressionException($"Unknown function at position {i + 1}");
+            throw new InvalidExpressionException($"Unknown function at position {pos + 1}");
         }
 
-        private IExpression ReadConstant(string expression, ref int i, Sign sign)
+        private IExpression ReadConstant(string expression, ref int pos, Sign sign)
         {
-            int start = i;
+            int start = pos;
             int decimalSeparators = 0;
-            while (i < expression.Length && (char.IsDigit(expression[i]) || expression[i] == '.'))
+            while (pos < expression.Length && (char.IsDigit(expression[pos]) || expression[pos] == '.'))
             {
-                if (expression[i] == '.')
+                if (expression[pos] == '.')
                 {
                     ++decimalSeparators;
                     if (decimalSeparators > 1)
                     {
-                        throw new InvalidExpressionException($"Duplicate decimal separator on position {i + 1}");
+                        throw new InvalidExpressionException($"Duplicate decimal separator on position {pos + 1}");
                     }
                 }
-                ++i;
+                ++pos;
             }
             // Leading and trailing spaces should be eliminated already so we set number style accordingly.
             // Decimal separator must be a point so we set formatProvider to CultureInfo.InvariantCulture.
-            var value = double.Parse(expression.Substring(start, i - start), NumberStyles.None | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
+            var value = double.Parse(expression.Substring(start, pos - start), NumberStyles.None | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
             if (sign == Sign.Negative)
                 value = -value;
             return new Constant(value);
         }
 
-        private ExpressionParserState GetNextState(string expression, int i)
+        private ExpressionParserState GetNextState(string expression, int pos)
         {
-            if (expression[i] == 'x')
+            if (expression[pos] == 'x')
             {
                 return ExpressionParserState.ReadingVariable;
             }
-            else if ((expression[i] >= 'A' && expression[i] <= 'Z') || (expression[i] >= 'a' && expression[i] <= 'z'))
+            else if ((expression[pos] >= 'A' && expression[pos] <= 'Z') || (expression[pos] >= 'a' && expression[pos] <= 'z'))
             {
                 return ExpressionParserState.ReadingMathFunction;
             }
-            else if (char.IsDigit(expression[i]))
+            else if (char.IsDigit(expression[pos]))
             {
                 return ExpressionParserState.ReadingConstant;
             }
-            throw new InvalidExpressionException($"Unexpected character at position {i + 1}");
+            throw new InvalidExpressionException($"Unexpected character at position {pos + 1}");
         }
 
-        private void SkipWhiteSpaces(string expression, ref int i)
+        private void SkipWhiteSpaces(string expression, ref int pos)
         {
-            while (i < expression.Length && expression[i] == ' ')
+            while (pos < expression.Length && expression[pos] == ' ')
             {
-                ++i;
+                ++pos;
             }
         }
     }
