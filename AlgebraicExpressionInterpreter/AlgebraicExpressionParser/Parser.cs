@@ -55,7 +55,7 @@ namespace AlgebraicExpressionParser
         }
 
         //popuniti
-        private Dictionary<Operator, MathFunction.Fun> functionMap = new Dictionary<Operator, MathFunction.Fun> {
+        private readonly Dictionary<Operator, MathFunction.Fun> functionMap = new Dictionary<Operator, MathFunction.Fun> {
             { Operator.Sin, Math.Sin },
             { Operator.Cos, Math.Cos },
             { Operator.Sqrt, Math.Sqrt },
@@ -77,9 +77,9 @@ namespace AlgebraicExpressionParser
             return 4;
         }
 
-        Deque<Operator> operators = new Deque<Operator>();
+        private readonly Deque<Operator> operators = new Deque<Operator>();
 
-        Deque<IExpression> output = new Deque<IExpression>();
+        private readonly Deque<IExpression> output = new Deque<IExpression>();
 
         //while (
         //    there is an operator o2 other than the left parenthesis at the top
@@ -116,9 +116,9 @@ namespace AlgebraicExpressionParser
             {
                 if (lastOperator > Operator.Functions)
                 {
-                    var operand = output.PopBack();
+                    var argument = output.PopBack();
                     var fun = functionMap[lastOperator];
-                    output.PushBack(new MathFunction(fun, operand));
+                    output.PushBack(new MathFunction(fun, argument));
                     return;
                 }
                 else
@@ -145,14 +145,15 @@ namespace AlgebraicExpressionParser
             while (IsNotLeftParenthesis())
             {
                 var topOperator = operators.PopBack();
-                var rhs = output.PopBack();
                 if (topOperator > Operator.Functions)
                 {
+                    var argument = output.PopBack();
                     var fun = functionMap[topOperator];
-                    output.PushBack(new MathFunction(fun, rhs));
+                    output.PushBack(new MathFunction(fun, argument));
                 }
                 else
                 {
+                    var rhs = output.PopBack();
                     var lhs = output.PopBack();
                     output.PushBack(EvaluateOperation(topOperator, lhs, rhs));
                 }
@@ -172,6 +173,9 @@ namespace AlgebraicExpressionParser
 
         public IExpression Parse(string expression) //vraca izraz iexpression
         {
+            operators.Clear();
+            output.Clear();
+
             ExpressionParserState state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
             Sign currentSign = Sign.Positive;
 
@@ -267,7 +271,6 @@ namespace AlgebraicExpressionParser
             {
                 CleanupOperators();
             }
-
             //while there are tokens on the operator stack:
             ///* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
             //{ assert the operator on top of the stack is not a(left) parenthesis}

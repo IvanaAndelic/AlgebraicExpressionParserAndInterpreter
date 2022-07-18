@@ -35,5 +35,10 @@ namespace AlgebraicExpressionParser
             list.RemoveAt(0);
             return item;
         }
+
+        public void Clear()
+        {
+            list.Clear();
+        }
     }
 }
