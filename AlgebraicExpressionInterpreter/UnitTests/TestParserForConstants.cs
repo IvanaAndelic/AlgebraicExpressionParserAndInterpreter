@@ -17,14 +17,6 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void ParseMethodReturnsExpressionForAnExpressionConsistingOfThatValueOnlyWithPrecedingSign()
-        {
-            var parser = new Parser();
-            Assert.AreEqual(-10.3, parser.Parse("-10.3").Interpret(new Context(5)));
-            Assert.AreEqual(21.32, parser.Parse("+21.32").Interpret(new Context(5)));
-        }
-
-        [TestMethod]
         public void ParseMethodReturnsExpressionForAnExpressionConsistingOfThatValueOnlyPrecededBySpace()
         {
             var parser = new Parser();

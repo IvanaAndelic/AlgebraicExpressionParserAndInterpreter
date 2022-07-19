@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class MathFunction : IExpression
+    public class MathFunction : Expression
     {
         private Fun function;
         private IExpression expression;
@@ -19,7 +19,7 @@ namespace AlgebraicExpressionInterpreter
             this.expression = expression;
         }
 
-        public double Interpret(Context context)
+        protected override double DoInterpret(Context context)
         {
             return function(expression.Interpret(context));
         }

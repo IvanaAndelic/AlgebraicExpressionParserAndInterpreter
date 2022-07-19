@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class SumExpression : IExpression
+    public class SumExpression : Expression
     {
 
         private readonly IExpression left;
@@ -18,7 +18,7 @@ namespace AlgebraicExpressionInterpreter
             this.right = right;
         }
 
-        public double Interpret(Context context)
+        protected override double DoInterpret(Context context)
         {
             return left.Interpret(context) + right.Interpret(context);
         }

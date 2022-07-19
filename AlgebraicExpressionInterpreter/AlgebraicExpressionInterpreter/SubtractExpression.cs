@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class SubtractExpression : IExpression
+    public class SubtractExpression : Expression
     {
         private readonly IExpression left;
         private readonly IExpression right;
@@ -17,7 +17,7 @@ namespace AlgebraicExpressionInterpreter
             this.right = right;
         }
 
-        public double Interpret(Context context)
+        protected override double DoInterpret(Context context)
         {
             return left.Interpret(context) - right.Interpret(context);
         }

@@ -9,5 +9,7 @@ namespace AlgebraicExpressionInterpreter
     public interface IExpression
     {
         double Interpret(Context context);
+
+        void ToggleSign();
     }
 }

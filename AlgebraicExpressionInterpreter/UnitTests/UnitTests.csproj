@@ -58,6 +58,7 @@
     <Compile Include="TestParserForConstants.cs" />
     <Compile Include="TestParserForVariables.cs" />
     <Compile Include="TestParserForFunctions.cs" />
+    <Compile Include="TestParserForEntriesWithSign.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

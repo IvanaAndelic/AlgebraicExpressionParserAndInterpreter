@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class Constant : IExpression
+    public class Constant : Expression
     {
         private readonly double value;
 
@@ -15,12 +15,9 @@ namespace AlgebraicExpressionInterpreter
             this.value = value;
         }
 
-        public double Interpret(Context context)
+        protected override double DoInterpret(Context context)
         {
-
             return value;
         }
-
-
     }
 }

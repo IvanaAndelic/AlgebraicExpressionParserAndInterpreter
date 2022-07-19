@@ -48,5 +48,12 @@ namespace UnitTests
             Parser parser = new Parser();
             Assert.AreEqual(Math.Sqrt(2), parser.Parse("sqrt(sin(x / 2) + cos(2 * x))").Interpret(new Context(3.1415926535897932384626433832795)), 1e-10);
         }
+
+        [TestMethod]
+        public void ParserReturnsExpressionForFunctionsWithPrecedingSign()
+        {
+            Parser parser = new Parser();
+            Assert.AreEqual(-Math.Sqrt(2), parser.Parse("-sqrt(2)").Interpret(new Context(3.1415926535897932384626433832795)), 1e-10);
+        }
     }
 }

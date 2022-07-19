@@ -6,21 +6,14 @@ using System.Threading.Tasks;
 
 namespace AlgebraicExpressionInterpreter
 {
-    public class VariableX : IExpression
+    public class VariableX : Expression
     {
-        public VariableX(bool isPositive = true)
+        public VariableX()
         {
-            this.isPositive = isPositive;
         }
-        public double Interpret(Context context)
+        protected override double DoInterpret(Context context)
         {
-            if (isPositive)
-            { 
-                return context.X;
-            }
-            return -context.X;
+            return context.X;
         }
-
-        private readonly bool isPositive;
     }
 }

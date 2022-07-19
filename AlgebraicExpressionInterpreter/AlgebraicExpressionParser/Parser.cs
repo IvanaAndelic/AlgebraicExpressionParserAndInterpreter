@@ -28,12 +28,6 @@ namespace AlgebraicExpressionParser
             ReadingMathFunction
         }
 
-        private enum Sign
-        {
-            Positive,
-            Negative
-        }
-
         private enum Operator
         {
             Addition,
@@ -41,6 +35,7 @@ namespace AlgebraicExpressionParser
             Multiplication,
             Division,
             LeftParenthesis,
+            Minus,
 
             Functions,
             Sin,
@@ -61,9 +56,9 @@ namespace AlgebraicExpressionParser
             { Operator.Sqrt, Math.Sqrt },
         };
 
-        private int GetPrecedence(Operator op)
+        private int GetPrecedence(Operator @operator)
         {
-            switch (op)
+            switch (@operator)
             {
                 case Operator.Addition:
                 case Operator.Subtraction:
@@ -72,6 +67,7 @@ namespace AlgebraicExpressionParser
                 case Operator.Division:
                     return 2;
                 case Operator.LeftParenthesis:
+                case Operator.Minus:
                     return 3;
             }
             return 4;
@@ -80,17 +76,23 @@ namespace AlgebraicExpressionParser
         private readonly Deque<Operator> operators = new Deque<Operator>();
         private readonly Deque<IExpression> output = new Deque<IExpression>();
 
-        private IExpression EvaluateOperator(Operator op)
+        private IExpression EvaluateOperator(Operator @operator)
         {
-            if (op > Operator.Functions)
+            if (@operator > Operator.Functions)
             {
                 var operand = output.PopBack();
-                var fun = functionMap[op];
+                var fun = functionMap[@operator];
                 return new MathFunction(fun, operand);
+            }
+            if (@operator == Operator.Minus)
+            {
+                var operand = output.PopBack();
+                operand.ToggleSign();
+                return operand;
             }
             var rhs = output.PopBack();
             var lhs = output.PopBack();
-            return EvaluateBinaryOperation(op, lhs, rhs);
+            return EvaluateBinaryOperation(@operator, lhs, rhs);
         }
         //while (
         //    there is an operator o2 other than the left parenthesis at the top
@@ -99,13 +101,13 @@ namespace AlgebraicExpressionParser
         //):
         //    pop o2 from the operator stack into the output queue
         //push o1 onto the operator stack
-        private void ProccessOperator(Operator op)
+        private void ProccessOperator(Operator @operator)
         {
-            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(op))
+            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(@operator))
             {
                 output.PushBack(EvaluateOperator(operators.PopBack()));
             }
-            operators.PushBack(op);
+            operators.PushBack(@operator);
         }
 
         private void CleanupTopOperators()
@@ -146,25 +148,24 @@ namespace AlgebraicExpressionParser
             return operators.PeekBack() != Operator.LeftParenthesis;
         }
 
-        public IExpression Parse(string expression) //vraca izraz iexpression
+        public IExpression Parse(string text)
         {
             operators.Clear();
             output.Clear();
 
             ExpressionParserState state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-            Sign currentSign = Sign.Positive;
 
-            for (int pos = 0; pos < expression.Length;)
+            for (int pos = 0; pos < text.Length;)
             {
                 switch (state)
                 {
                     case ExpressionParserState.SkippingWhiteSpacesAfterOperator:
-                        SkipWhiteSpaces(expression, ref pos);
-                        if (pos == expression.Length)
+                        SkipWhiteSpaces(text, ref pos);
+                        if (pos == text.Length)
                         {
                             throw new InvalidExpressionException("Expression terminated unexpectedly");
                         }
-                        switch (expression[pos])
+                        switch (text[pos])
                         {
                             case '(':
                                 operators.PushBack(Operator.LeftParenthesis);
@@ -173,28 +174,27 @@ namespace AlgebraicExpressionParser
                             case ')':
                                 throw new InvalidExpressionException($"Unexpected right parenthesis on position {pos + 1}");
                             default:
-                                switch (expression[pos])
+                                switch (text[pos])
                                 {
                                     case '-':
-                                        currentSign = Sign.Negative;
+                                        operators.PushBack(Operator.Minus);
                                         ++pos;
                                         break;
                                     case '+':
-                                        currentSign = Sign.Positive;
                                         ++pos;
                                         break;
                                 }
-                                state = GetNextState(expression, pos);
+                                state = GetNextState(text, pos);
                                 break;
                         }
                         break;
                     case ExpressionParserState.SkippingWhiteSpacesBeforeOperator:
-                        SkipWhiteSpaces(expression, ref pos);
-                        if (pos == expression.Length)
+                        SkipWhiteSpaces(text, ref pos);
+                        if (pos == text.Length)
                         {
                             break;
                         }
-                        switch (expression[pos])
+                        switch (text[pos])
                         {
                             case '+':
                                 ProccessOperator(Operator.Addition);
@@ -224,19 +224,17 @@ namespace AlgebraicExpressionParser
                         ++pos;
                         break;
                     case ExpressionParserState.ReadingVariable:
-                        output.PushBack(new VariableX(currentSign == Sign.Positive));
+                        output.PushBack(new VariableX());
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
                         ++pos;
-                        currentSign = Sign.Positive;
                         break;
                     case ExpressionParserState.ReadingConstant:
-                        var constant = ReadConstant(expression, ref pos, currentSign);
+                        var constant = ReadConstant(text, ref pos);
                         output.PushBack(constant);
                         state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
-                        currentSign = Sign.Positive;
                         break;
                     case ExpressionParserState.ReadingMathFunction:
-                        ReadFunction(expression, ref pos);
+                        ReadFunction(text, ref pos);
                         state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
                         break;
                 }
@@ -268,6 +266,10 @@ namespace AlgebraicExpressionParser
                     var fun = functionMap[topOperator];
                     lhs = new MathFunction(fun, lhs);
                 }
+                else if (topOperator == Operator.Minus)
+                {
+                    lhs.ToggleSign();
+                }
                 else
                 {
                     var rhs = output.PopFront();
@@ -277,9 +279,9 @@ namespace AlgebraicExpressionParser
             return lhs;
         }
 
-        private IExpression EvaluateBinaryOperation(Operator op, IExpression lhs, IExpression rhs)
+        private IExpression EvaluateBinaryOperation(Operator @operator, IExpression lhs, IExpression rhs)
         {
-            switch (op)
+            switch (@operator)
             {
                 case Operator.Addition:
                     return new SumExpression(lhs, rhs);
@@ -294,20 +296,20 @@ namespace AlgebraicExpressionParser
             return null;
         }
 
-        private void ReadFunction(string expression, ref int pos)
+        private void ReadFunction(string text, ref int pos)
         {
-            Operator fun = ResolveFunction(expression, ref pos);
+            Operator fun = ResolveFunction(text, ref pos);
             operators.PushBack(fun);
             // Function name must be followed by left parenthesis.
-            if (expression[pos] != '(')
+            if (text[pos] != '(')
                 throw new InvalidExpressionException($"Function name not followed by left parenthesis at position {pos + 1}");
             operators.PushBack(Operator.LeftParenthesis);
             ++pos;
         }
 
-        private Operator ResolveFunction(string expression, ref int pos)
+        private Operator ResolveFunction(string text, ref int pos)
         {
-            string funName = expression.Substring(pos);
+            string funName = text.Substring(pos);
             if (funName.StartsWith("sin"))
             {
                 pos += 3;
@@ -341,13 +343,13 @@ namespace AlgebraicExpressionParser
             throw new InvalidExpressionException($"Unknown function at position {pos + 1}");
         }
 
-        private IExpression ReadConstant(string expression, ref int pos, Sign sign)
+        private IExpression ReadConstant(string text, ref int pos)
         {
             int start = pos;
             int decimalSeparators = 0;
-            while (pos < expression.Length && (char.IsDigit(expression[pos]) || expression[pos] == '.'))
+            while (pos < text.Length && (char.IsDigit(text[pos]) || text[pos] == '.'))
             {
-                if (expression[pos] == '.')
+                if (text[pos] == '.')
                 {
                     ++decimalSeparators;
                     if (decimalSeparators > 1)
@@ -359,32 +361,34 @@ namespace AlgebraicExpressionParser
             }
             // Leading and trailing spaces should be eliminated already so we set number style accordingly.
             // Decimal separator must be a point so we set formatProvider to CultureInfo.InvariantCulture.
-            var value = double.Parse(expression.Substring(start, pos - start), NumberStyles.None | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-            if (sign == Sign.Negative)
-                value = -value;
+            var value = double.Parse(text.Substring(start, pos - start), NumberStyles.None | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
             return new Constant(value);
         }
 
-        private ExpressionParserState GetNextState(string expression, int pos)
+        private ExpressionParserState GetNextState(string text, int pos)
         {
-            if (expression[pos] == 'x')
+            if (text[pos] == '(')
+            {
+                return ExpressionParserState.SkippingWhiteSpacesAfterOperator;
+            }
+            if (text[pos] == 'x')
             {
                 return ExpressionParserState.ReadingVariable;
             }
-            else if ((expression[pos] >= 'A' && expression[pos] <= 'Z') || (expression[pos] >= 'a' && expression[pos] <= 'z'))
+            if ((text[pos] >= 'A' && text[pos] <= 'Z') || (text[pos] >= 'a' && text[pos] <= 'z'))
             {
                 return ExpressionParserState.ReadingMathFunction;
             }
-            else if (char.IsDigit(expression[pos]))
+            if (char.IsDigit(text[pos]))
             {
                 return ExpressionParserState.ReadingConstant;
             }
             throw new InvalidExpressionException($"Unexpected character at position {pos + 1}");
         }
 
-        private void SkipWhiteSpaces(string expression, ref int pos)
+        private void SkipWhiteSpaces(string text, ref int pos)
         {
-            while (pos < expression.Length && expression[pos] == ' ')
+            while (pos < text.Length && text[pos] == ' ')
             {
                 ++pos;
             }
