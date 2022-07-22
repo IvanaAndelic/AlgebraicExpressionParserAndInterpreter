@@ -72,7 +72,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForMultipleMinusSigns()
         {
             var parser = new Parser();
@@ -80,7 +80,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForMultiplePlusSigns()
         {
             var parser = new Parser();
@@ -88,7 +88,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForPlusAndMinusSignsPecedingConstant()
         {
             var parser = new Parser();
@@ -96,7 +96,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForMinusAndPlusSignsPecedingConstant()
         {
             var parser = new Parser();

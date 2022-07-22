@@ -12,7 +12,7 @@ namespace UnitTests
         {
             IExpression piHalf = new Constant(Math.PI / 2.0);
             IExpression mathFun = new MathFunction(Math.Sin, piHalf);
-            Assert.AreEqual(1.0, mathFun.Interpret(new Context(3)), 1e-5);
+            Assert.AreEqual(1.0, mathFun.Interpret(new Context(3)), 1e-10);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace UnitTests
         {
             IExpression argument = new VariableX();
             IExpression mathFun = new MathFunction(Math.Sqrt, argument);
-            Assert.AreEqual(Math.Sqrt(2.0), mathFun.Interpret(new Context(2)));
+            Assert.AreEqual(Math.Sqrt(2.0), mathFun.Interpret(new Context(2)), 1e-10);
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace UnitTests
             IExpression xPlus2 = new SumExpression(x, new Constant(2));
             IExpression sqrtFun = new MathFunction(Math.Sqrt, xPlus2);
             IExpression sinFun = new MathFunction(Math.Sin, sqrtFun);
-            Assert.AreEqual(Math.Sqrt(2), sinFun.Interpret(new Context(2)));
+            Assert.AreEqual(Math.Sin(Math.Sqrt(2 + 2)), sinFun.Interpret(new Context(2)), 1e-10);
         }
 
         [TestMethod]
@@ -46,15 +46,15 @@ namespace UnitTests
         {
             IExpression pi = new Constant(Math.PI);
             IExpression mathFun = new MathFunction(Math.Cos, pi);
-            Assert.AreEqual(-1.0, mathFun.Interpret(new Context(Math.PI)));
+            Assert.AreEqual(-1.0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
         }
 
         [TestMethod]
         public void MathFunctionOfCosReturns0ForPiHalfConstant()
         {
-            IExpression piHalf = new Constant(Math.PI);
+            IExpression piHalf = new Constant(Math.PI / 2);
             IExpression mathFun = new MathFunction(Math.Cos, piHalf);
-            Assert.AreEqual(0, mathFun.Interpret(new Context(Math.PI)));
+            Assert.AreEqual(0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace UnitTests
         {
             IExpression zero = new Constant(0);
             IExpression mathFun = new MathFunction(Math.Cos, zero);
-            Assert.AreEqual(1, mathFun.Interpret(new Context(0)));
+            Assert.AreEqual(1, mathFun.Interpret(new Context(0)), 1e-10);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace UnitTests
             IExpression xPlus2 = new SumExpression(x, new Constant(2));
             IExpression sqrtFun = new MathFunction(Math.Sqrt, xPlus2);
             IExpression cosFun = new MathFunction(Math.Cos, sqrtFun);
-            Assert.AreEqual(Math.Sqrt(2), cosFun.Interpret(new Context(2)));
+            Assert.AreEqual(Math.Cos(Math.Sqrt(2 + 2)), cosFun.Interpret(new Context(2)), 1e-10);
         }
     }
 }

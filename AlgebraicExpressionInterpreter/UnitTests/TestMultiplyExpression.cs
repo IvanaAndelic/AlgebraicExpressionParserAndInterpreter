@@ -12,7 +12,7 @@ namespace UnitTests
         {
             IExpression left = new Constant(5);
             IExpression right = new Constant(-2);
-            Assert.AreEqual(0, new MultiplyExpression(left, right).Interpret(new Context(24)));
+            Assert.AreEqual(-10, new MultiplyExpression(left, right).Interpret(new Context(24)), 1e-10);
         }
 
         [TestMethod]
@@ -20,7 +20,7 @@ namespace UnitTests
         {
             IExpression left = new Constant(3);
             IExpression right = new VariableX();
-            Assert.AreEqual(0, new MultiplyExpression(left, right).Interpret(new Context(5)));
+            Assert.AreEqual(15, new MultiplyExpression(left, right).Interpret(new Context(5)), 1e-10);
         }
 
         [TestMethod]
@@ -28,8 +28,8 @@ namespace UnitTests
         {
             IExpression left = new VariableX();
             IExpression right = new VariableX();
-            Assert.AreEqual(0, new MultiplyExpression(left, right).Interpret(new Context(5)));
-            Assert.AreEqual(0, new MultiplyExpression(left, right).Interpret(new Context(8)));
+            Assert.AreEqual(25, new MultiplyExpression(left, right).Interpret(new Context(5)), 1e-10);
+            Assert.AreEqual(64, new MultiplyExpression(left, right).Interpret(new Context(8)), 1e-10);
         }
     }
 }

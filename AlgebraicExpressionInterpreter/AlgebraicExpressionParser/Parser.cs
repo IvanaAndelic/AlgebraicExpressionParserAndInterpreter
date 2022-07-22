@@ -3,31 +3,31 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AlgebraicExpressionParser
 {
-
-    public class InvalidExpressionException : Exception
-    {
-        public InvalidExpressionException(string message)
-            : base(message) { }
-    }
-
+    /// <summary>
+    ///   Class that parses a string with mathematical expression and evaluates
+    ///   the resulting <c>Expression</c> object.
+    /// </summary>
     public class Parser
     {
-        private enum ExpressionParserState
+        /// <summary>
+        ///   Specifies current state of the parsing process.
+        /// </summary>
+        private enum ParserState
         {
             SkippingWhiteSpacesBeforeOperator,
             SkippingWhiteSpacesAfterOperator,
             ReadingOperator,
             ReadingConstant,
             ReadingVariable,
-            ReadingMathFunction
+            ReadingFunction
         }
 
+        /// <summary>
+        ///   Operators supported.
+        /// </summary>
         private enum Operator
         {
             Addition,
@@ -50,12 +50,133 @@ namespace AlgebraicExpressionParser
         }
 
         //popuniti
+        /// <summary>
+        ///   Mapping of <c>Operator</c> enumeration to function delegates.
+        /// </summary>
         private readonly Dictionary<Operator, MathFunction.Fun> functionMap = new Dictionary<Operator, MathFunction.Fun> {
             { Operator.Sin, Math.Sin },
             { Operator.Cos, Math.Cos },
             { Operator.Sqrt, Math.Sqrt },
         };
 
+        /// <summary>
+        ///   Stack with operators to be processed. On successful parsing this 
+        ///   stack should be empty.
+        /// </summary>
+        private readonly Stack<Operator> operators = new Stack<Operator>();
+
+        /// <summary>
+        ///   Output stack where results are pushed. On successful parsing this 
+        ///   stack should contain the final expression only.
+        /// </summary>
+        private readonly Stack<IExpression> output = new Stack<IExpression>();
+
+        /// <summary>
+        ///   Parses the text of mathematical expression provided. Implements 
+        ///   <see href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">
+        ///   Dykstra's Shunting yard algorithm</see>, taking care of operator 
+        ///   precedence.
+        /// </summary>
+        /// <param name="text">String with expression to parse.</param>
+        /// <returns>Final <c>Expression</c> object.</returns>
+        public IExpression Parse(string text)
+        {
+            operators.Clear();
+            output.Clear();
+            ParserState state = ParserState.SkippingWhiteSpacesAfterOperator;
+
+            for (int pos = 0; pos < text.Length;)
+            {
+                switch (state)
+                {
+                    case ParserState.SkippingWhiteSpacesAfterOperator:
+                        SkipWhiteSpaces(text, ref pos);
+                        if (pos == text.Length)
+                        {
+                            throw new ParserException("Expression terminated unexpectedly", pos);
+                        }
+                        switch (text[pos])
+                        {
+                            case '(':
+                                operators.Push(Operator.LeftParenthesis);
+                                ++pos;
+                                break;
+                            case ')':
+                                throw new ParserException("Unexpected right parenthesis", pos);
+                            default:
+                                switch (text[pos])
+                                {
+                                    case '-':
+                                        operators.Push(Operator.Minus);
+                                        ++pos;
+                                        break;
+                                    case '+':
+                                        ++pos;
+                                        break;
+                                }
+                                state = GetStateAfterOperator(text, ref pos);
+                                break;
+                        }
+                        break;
+                    case ParserState.SkippingWhiteSpacesBeforeOperator:
+                        SkipWhiteSpaces(text, ref pos);
+                        if (pos == text.Length)
+                        {
+                            break;
+                        }
+                        switch (text[pos])
+                        {
+                            case '+':
+                                PushOperator(Operator.Addition);
+                                state = ParserState.SkippingWhiteSpacesAfterOperator;
+                                break;
+                            case '-':
+                                PushOperator(Operator.Subtraction);
+                                state = ParserState.SkippingWhiteSpacesAfterOperator;
+                                break;
+                            case '*':
+                                PushOperator(Operator.Multiplication);
+                                state = ParserState.SkippingWhiteSpacesAfterOperator;
+                                break;
+                            case '/':
+                                PushOperator(Operator.Division);
+                                state = ParserState.SkippingWhiteSpacesAfterOperator;
+                                break;
+                            case ')':
+                                ProcessRightParenthesis(pos);
+                                break;
+                            default:
+                                throw new ParserException("Invalid operator", pos);
+                        }
+                        ++pos;
+                        break;
+                    case ParserState.ReadingVariable:
+                        output.Push(new VariableX());
+                        state = ParserState.SkippingWhiteSpacesBeforeOperator;
+                        ++pos;
+                        break;
+                    case ParserState.ReadingConstant:
+                        PushConstant(text, ref pos);
+                        state = ParserState.SkippingWhiteSpacesBeforeOperator;
+                        break;
+                    case ParserState.ReadingFunction:
+                        PushFunction(text, ref pos);
+                        state = ParserState.SkippingWhiteSpacesAfterOperator;
+                        break;
+                }
+            }
+            if (state != ParserState.SkippingWhiteSpacesBeforeOperator)
+            {
+                throw new ParserException("Expression terminated unexpectedly", text.Length);
+            }
+            return FinalExpression();
+        }
+
+        /// <summary>
+        ///   Evaluates precedence of the operator passed.
+        /// </summary>
+        /// <param name="operator">Operator for which precedence is reqested.</param>
+        /// <returns>Integer represeting precedence level. Higher values represent higher precedence.</returns>
         private int GetPrecedence(Operator @operator)
         {
             switch (@operator)
@@ -73,212 +194,140 @@ namespace AlgebraicExpressionParser
             return 4;
         }
 
-        private readonly Deque<Operator> operators = new Deque<Operator>();
-        private readonly Deque<IExpression> output = new Deque<IExpression>();
-
-        private IExpression EvaluateOperator(Operator @operator)
+        /// <summary>
+        ///   Pushes operator passed onto operators stack. If operator on the 
+        ///   top of the operator stack has higher precedence then operator 
+        ///   passed, function evaluates operators from the top of the stack 
+        ///   that have higher precedence first and pushes the result to the 
+        ///   output stack.
+        /// </summary>
+        /// <param name="operator">Operator to push onto operator stack.</param>
+        private void PushOperator(Operator @operator)
         {
-            if (@operator > Operator.Functions)
+            while (operators.Count > 0 && operators.Peek() != Operator.LeftParenthesis && GetPrecedence(operators.Peek()) > GetPrecedence(@operator))
             {
-                var operand = output.PopBack();
-                var fun = functionMap[@operator];
-                return new MathFunction(fun, operand);
+                EvaluateExpressionFromTop();
             }
-            if (@operator == Operator.Minus)
-            {
-                var operand = output.PopBack();
-                operand.ToggleSign();
-                return operand;
-            }
-            var rhs = output.PopBack();
-            var lhs = output.PopBack();
-            return EvaluateBinaryOperation(@operator, lhs, rhs);
-        }
-        //while (
-        //    there is an operator o2 other than the left parenthesis at the top
-        //    of the operator stack, and(o2 has greater precedence than o1
-        //    or they have the same precedence and o1 is left - associative)
-        //):
-        //    pop o2 from the operator stack into the output queue
-        //push o1 onto the operator stack
-        private void ProccessOperator(Operator @operator)
-        {
-            while (operators.Count > 0 && operators.PeekBack() != Operator.LeftParenthesis && GetPrecedence(operators.PeekBack()) > GetPrecedence(@operator))
-            {
-                output.PushBack(EvaluateOperator(operators.PopBack()));
-            }
-            operators.PushBack(@operator);
+            operators.Push(@operator);
         }
 
-        private void CleanupTopOperators()
+        /// <summary>
+        ///   Evaluates remaining operators on the operator stack, 
+        /// </summary>
+        /// <returns>Final <c>Expression</c> object.</returns>
+        private IExpression FinalExpression()
         {
-            var topOperator = operators.PopBack();
-            while (operators.Count > 0 && GetPrecedence(operators.PeekBack()) <= GetPrecedence(topOperator))
-            {
-                output.PushBack(EvaluateOperator(topOperator));
-                topOperator = operators.PopBack();
-            }
-            operators.PushBack(topOperator);
-        }
-
-        //while the operator at the top of the operator stack is not a left parenthesis:
-        //    { assert the operator stack is not empty}
-        //    /* If the stack runs out without finding a left parenthesis, then there are mismatched parentheses. */
-        //    pop the operator from the operator stack into the output queue
-        //{ assert there is a left parenthesis at the top of the operator stack}
-        //    pop the left parenthesis from the operator stack and discard it
-        //if there is a function token at the top of the operator stack, then:
-        //    pop the function from the operator stack into the output queue
-        private void ProcessRightParenthesis()
-        {
-            while (IsNotLeftParenthesis())
-            {
-                output.PushBack(EvaluateOperator(operators.PopBack()));
-            }
-            // Pop the left parenthesis from the operator stack and discard it.
-            operators.PopBack();
-        }
-
-        private bool IsNotLeftParenthesis()
-        {
-            if (operators.Count == 0)
-            {
-                throw new InvalidExpressionException("Mismatched parentheses");
-            }
-            return operators.PeekBack() != Operator.LeftParenthesis;
-        }
-
-        public IExpression Parse(string text)
-        {
-            operators.Clear();
-            output.Clear();
-
-            ExpressionParserState state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-
-            for (int pos = 0; pos < text.Length;)
-            {
-                switch (state)
-                {
-                    case ExpressionParserState.SkippingWhiteSpacesAfterOperator:
-                        SkipWhiteSpaces(text, ref pos);
-                        if (pos == text.Length)
-                        {
-                            throw new InvalidExpressionException("Expression terminated unexpectedly");
-                        }
-                        switch (text[pos])
-                        {
-                            case '(':
-                                operators.PushBack(Operator.LeftParenthesis);
-                                ++pos;
-                                break;
-                            case ')':
-                                throw new InvalidExpressionException($"Unexpected right parenthesis on position {pos + 1}");
-                            default:
-                                switch (text[pos])
-                                {
-                                    case '-':
-                                        operators.PushBack(Operator.Minus);
-                                        ++pos;
-                                        break;
-                                    case '+':
-                                        ++pos;
-                                        break;
-                                }
-                                state = GetNextState(text, pos);
-                                break;
-                        }
-                        break;
-                    case ExpressionParserState.SkippingWhiteSpacesBeforeOperator:
-                        SkipWhiteSpaces(text, ref pos);
-                        if (pos == text.Length)
-                        {
-                            break;
-                        }
-                        switch (text[pos])
-                        {
-                            case '+':
-                                ProccessOperator(Operator.Addition);
-                                state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '-':
-                                ProccessOperator(Operator.Subtraction);
-                                state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '*':
-                                ProccessOperator(Operator.Multiplication);
-                                state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '/':
-                                ProccessOperator(Operator.Division);
-                                state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '(':
-                                operators.PushBack(Operator.LeftParenthesis);
-                                break;
-                            case ')':
-                                ProcessRightParenthesis();
-                                break;
-                            default:
-                                throw new InvalidExpressionException($"Invalid operator on position {pos + 1}");
-                        }
-                        ++pos;
-                        break;
-                    case ExpressionParserState.ReadingVariable:
-                        output.PushBack(new VariableX());
-                        state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
-                        ++pos;
-                        break;
-                    case ExpressionParserState.ReadingConstant:
-                        var constant = ReadConstant(text, ref pos);
-                        output.PushBack(constant);
-                        state = ExpressionParserState.SkippingWhiteSpacesBeforeOperator;
-                        break;
-                    case ExpressionParserState.ReadingMathFunction:
-                        ReadFunction(text, ref pos);
-                        state = ExpressionParserState.SkippingWhiteSpacesAfterOperator;
-                        break;
-                }
-            }
-            // Process any operator with higher precedence at the end of expression
-            if (operators.Count > 1 && GetPrecedence(operators.PeekBack()) > 1)
-            {
-                CleanupTopOperators();
-            }
-            return FinalEvaluation();
-        }
-
-        //while there are tokens on the operator stack:
-        ///* If the operator token on the top of the stack is a parenthesis, then there are mismatched parentheses. */
-        //{ assert the operator on top of the stack is not a(left) parenthesis}
-        //pop the operator from the operator stack onto the output queue
-        private IExpression FinalEvaluation()
-        {
-            var lhs = output.PopFront();
             while (operators.Count > 0)
             {
-                var topOperator = operators.PopFront();
-                if (topOperator == Operator.LeftParenthesis)
+                if (operators.Peek() == Operator.LeftParenthesis)
                 {
-                    throw new InvalidExpressionException("Mismatched parentheses");
+                    // TODO: Provide exact position
+                    throw new ParserException("Right parentesis is missing or mismatched", 0);
                 }
-                if (topOperator > Operator.Functions)
+                EvaluateExpressionFromTop();
+            }
+            return output.Pop();
+        }
+
+        /// <summary>
+        ///   Evaluates expression for the top operators. First pops all 
+        ///   operators with equal or higher precedence than top operator, 
+        ///   together with corresponding operands and pushes them to a local 
+        ///   stacks in order to evaluate operations from left to right, as 
+        ///   they appear in the original text. Then processes local stacks 
+        ///   and pushes the result to the output stack.
+        /// </summary>
+        private void EvaluateExpressionFromTop()
+        {
+            // Local stacks for evaluation from left to right.
+            Stack<IExpression> endExpressions = new Stack<IExpression>();
+            Stack<Operator> endOperators = new Stack<Operator>();
+            var topOperator = operators.Pop();
+            var precedence = GetPrecedence(topOperator);
+            // Move first operand.
+            endExpressions.Push(output.Pop());
+            while (GetPrecedence(topOperator) >= precedence)
+            {
+                endOperators.Push(topOperator);
+                // For binary operation, additional operand is required.
+                switch (topOperator)
                 {
-                    var fun = functionMap[topOperator];
+                    case Operator.Addition:
+                    case Operator.Subtraction:
+                    case Operator.Multiplication:
+                    case Operator.Division:
+                        endExpressions.Push(output.Pop());
+                        break;
+                }
+                if (operators.Count == 0 || GetPrecedence(operators.Peek()) < precedence || operators.Peek() == Operator.LeftParenthesis)
+                {
+                    break;
+                }
+                topOperator = operators.Pop();
+            }
+            Debug.Assert(endExpressions.Count != 0);
+            // Evaluate operations from the local stack and push the resulting expression to output stack.
+            var lhs = endExpressions.Pop();
+            while (endOperators.Count > 0)
+            {
+                var @operator = endOperators.Pop();
+                if (@operator > Operator.Functions)
+                {
+                    var fun = functionMap[@operator];
                     lhs = new MathFunction(fun, lhs);
                 }
-                else if (topOperator == Operator.Minus)
+                else if (@operator == Operator.Minus)
                 {
                     lhs.ToggleSign();
                 }
                 else
                 {
-                    var rhs = output.PopFront();
-                    lhs = EvaluateBinaryOperation(topOperator, lhs, rhs);
+                    var rhs = endExpressions.Pop();
+                    lhs = EvaluateBinaryOperation(@operator, lhs, rhs);
                 }
             }
-            return lhs;
+            output.Push(lhs);
+            Debug.Assert(endExpressions.Count == 0);
         }
 
+        /// <summary>
+        ///   Evaluates expression left from right parenthesis up to matching 
+        ///   left parenthesis.
+        /// </summary>
+        /// <param name="pos">Position of the right parenthesis used for error reporting.</param>
+        private void ProcessRightParenthesis(int pos)
+        {
+            while (IsNotLeftParenthesis(pos))
+            {
+                EvaluateExpressionFromTop();
+            }
+            // Pop the left parenthesis from the operator stack and discard it.
+            operators.Pop();
+        }
+
+        /// <summary>
+        ///   Checks if operator on the top of operator stack is not left 
+        ///   parenthesis.
+        /// </summary>
+        /// <param name="pos">Position of the right parenthesis used for error reporting.</param>
+        /// <returns>Returns <c>true</c> if character is not left parenthesis. If character is '(' returns <c>false</c>.</returns>
+        private bool IsNotLeftParenthesis(int pos)
+        {
+            if (operators.Count == 0)
+            {
+                throw new ParserException("Left parenthesis is missing or mismatched", pos);
+            }
+            return operators.Peek() != Operator.LeftParenthesis;
+        }
+
+        /// <summary>
+        ///   Creates ne expression for a binary operator, lefthand and 
+        ///   righthand expressions provided.
+        /// </summary>
+        /// <param name="operator">Binary operator for which expression should be evaluated.</param>
+        /// <param name="lhs">Expression on the lefthand side of operator.</param>
+        /// <param name="rhs">Expression on the righthand side of operator.</param>
+        /// <returns>Resulting <c>Expression</c> object.</returns>
         private IExpression EvaluateBinaryOperation(Operator @operator, IExpression lhs, IExpression rhs)
         {
             switch (@operator)
@@ -296,54 +345,61 @@ namespace AlgebraicExpressionParser
             return null;
         }
 
-        private void ReadFunction(string text, ref int pos)
+        /// <summary>
+        ///   Resolves the function and pushes it onto operator stack.
+        /// </summary>
+        /// <param name="text">Name of the function.</param>
+        /// <param name="pos">Position of the function name used for error reporting.</param>
+        private void PushFunction(string text, ref int pos)
         {
             Operator fun = ResolveFunction(text, ref pos);
-            operators.PushBack(fun);
+            operators.Push(fun);
             // Function name must be followed by left parenthesis.
             if (text[pos] != '(')
-                throw new InvalidExpressionException($"Function name not followed by left parenthesis at position {pos + 1}");
-            operators.PushBack(Operator.LeftParenthesis);
+                throw new ParserException("Left parenthesis is missing after function name", pos);
+            operators.Push(Operator.LeftParenthesis);
             ++pos;
         }
 
+        /// <summary>
+        ///   Resolves the function from its name.
+        /// </summary>
+        /// <param name="text">Text of the mathematical expression.</param>
+        /// <param name="pos">Index of the function name start.</param>
+        /// <returns><c>Operator</c> corresponding to resolved function name.</returns>
         private Operator ResolveFunction(string text, ref int pos)
         {
-            string funName = text.Substring(pos);
-            if (funName.StartsWith("sin"))
+            string functionName = GetIdentifier(text, pos);
+            switch (functionName)
             {
-                pos += 3;
-                return Operator.Sin;
+                case "sin":
+                    pos += 3;
+                    return Operator.Sin;
+                case "cos":
+                    pos += 3;
+                    return Operator.Cos;
+                case "tan":
+                    pos += 3;
+                    return Operator.Tan;
+                case "sqrt":
+                    pos += 4;
+                    return Operator.Sqrt;
+                case "ln":
+                    pos += 2;
+                    return Operator.Ln;
+                case "log":
+                    pos += 3;
+                    return Operator.Log;
             }
-            if (funName.StartsWith("cos"))
-            {
-                pos += 3;
-                return Operator.Cos;
-            }
-            if (funName.StartsWith("tan"))
-            {
-                pos += 3;
-                return Operator.Tan;
-            }
-            if (funName.StartsWith("sqrt"))
-            {
-                pos += 4;
-                return Operator.Sqrt;
-            }
-            if (funName.StartsWith("ln"))
-            {
-                pos += 2;
-                return Operator.Ln;
-            }
-            if (funName.StartsWith("log"))
-            {
-                pos += 3;
-                return Operator.Log;
-            }
-            throw new InvalidExpressionException($"Unknown function at position {pos + 1}");
+            throw new ParserException("Unknown function", pos);
         }
 
-        private IExpression ReadConstant(string text, ref int pos)
+        /// <summary>
+        ///   Parses and pushes the constant to the output stack.
+        /// </summary>
+        /// <param name="text">Text of the mathematical expression.</param>
+        /// <param name="pos">Position where value of the constant starts.</param>
+        private void PushConstant(string text, ref int pos)
         {
             int start = pos;
             int decimalSeparators = 0;
@@ -354,7 +410,7 @@ namespace AlgebraicExpressionParser
                     ++decimalSeparators;
                     if (decimalSeparators > 1)
                     {
-                        throw new InvalidExpressionException($"Duplicate decimal separator on position {pos + 1}");
+                        throw new ParserException("Duplicate decimal separator", pos);
                     }
                 }
                 ++pos;
@@ -362,30 +418,67 @@ namespace AlgebraicExpressionParser
             // Leading and trailing spaces should be eliminated already so we set number style accordingly.
             // Decimal separator must be a point so we set formatProvider to CultureInfo.InvariantCulture.
             var value = double.Parse(text.Substring(start, pos - start), NumberStyles.None | NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture);
-            return new Constant(value);
+            output.Push(new Constant(value));
         }
 
-        private ExpressionParserState GetNextState(string text, int pos)
+        /// <summary>
+        ///   Evaluates next state after operator was read.
+        /// </summary>
+        /// <param name="text">Text of the mathematical expression.</param>
+        /// <param name="pos">Position where value of the constant starts.</param>
+        /// <returns>New <c>ParserState</c> value.</returns>
+        private ParserState GetStateAfterOperator(string text, ref int pos)
         {
             if (text[pos] == '(')
             {
-                return ExpressionParserState.SkippingWhiteSpacesAfterOperator;
+                return ParserState.SkippingWhiteSpacesAfterOperator;
             }
             if (text[pos] == 'x')
             {
-                return ExpressionParserState.ReadingVariable;
-            }
-            if ((text[pos] >= 'A' && text[pos] <= 'Z') || (text[pos] >= 'a' && text[pos] <= 'z'))
-            {
-                return ExpressionParserState.ReadingMathFunction;
+                return ParserState.ReadingVariable;
             }
             if (char.IsDigit(text[pos]))
             {
-                return ExpressionParserState.ReadingConstant;
+                return ParserState.ReadingConstant;
             }
-            throw new InvalidExpressionException($"Unexpected character at position {pos + 1}");
+            // Extract a sequence of letters and digits.
+            string identifier = GetIdentifier(text, pos);
+            if (identifier.Length > 0)
+            {
+                // If identifier is folowed by parenthesis, it must be a function.
+                if (pos + identifier.Length < text.Length && text[pos + identifier.Length] == '(')
+                    return ParserState.ReadingFunction;
+            }
+            throw new ParserException("Unexpected character", pos);
         }
 
+        /// <summary>
+        ///   Extracts identifier, which starts with a letter and is followed 
+        ///   by a sequence of letters and digits.
+        /// </summary>
+        /// <param name="text">Text of the mathematical expression.</param>
+        /// <param name="pos">Position where extraction starts.</param>
+        /// <returns>String with identifier.</returns>
+        private string GetIdentifier(string text, int pos)
+        {
+            if (Char.IsLetter(text[pos]))
+            {
+                int i = pos;
+                do
+                {
+                    ++i;
+                }
+                while (i < text.Length && Char.IsLetter(text[i]));
+                return text.Substring(pos, i - pos);
+            }
+            return string.Empty;
+        }
+
+        /// <summary>
+        ///   Increment <c>pos</c> to the first non-space character.
+        /// </summary>
+        /// <param name="text">Text of the mathematical expression.</param>
+        /// <param name="pos">Position where search starts.</param>
         private void SkipWhiteSpaces(string text, ref int pos)
         {
             while (pos < text.Length && text[pos] == ' ')
@@ -395,5 +488,3 @@ namespace AlgebraicExpressionParser
         }
     }
 }
-
-

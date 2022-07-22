@@ -20,7 +20,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionIfVariableNamehasAdditionalCharacters()
         {
             var parser = new Parser();
@@ -28,7 +28,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionIfMinusSignIsNotImmediatellyBeforeVariable()
         {
             var parser = new Parser();
@@ -36,7 +36,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionIfPlusSignIsNotImmediatellyBeforeVariable()
         {
             var parser = new Parser();
@@ -121,15 +121,6 @@ namespace UnitTests
         {
             var parser = new Parser();
             Assert.AreEqual(-70, parser.Parse("x - x * 3 * x").Interpret(new Context(5)));
-        }
-
-        [TestMethod]
-        public void ParseMethodReturnsExpressionForAnExpressionWithParentheses()
-        {
-            var parser = new Parser();
-            Assert.AreEqual(8 / -5.0, parser.Parse("(x + 3) / (x - 10)").Interpret(new Context(5)));
-            Assert.AreEqual(24 / -5.0, parser.Parse("3 * (x + 3) / (x - 10)").Interpret(new Context(5)), 1e-10);
-            Assert.AreEqual(25 / -10.0, parser.Parse("(3 * (x + 3) + 1) / (2 * (x - 10))").Interpret(new Context(5)));
         }
     }
 }

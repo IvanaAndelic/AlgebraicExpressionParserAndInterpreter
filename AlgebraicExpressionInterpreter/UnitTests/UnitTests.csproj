@@ -59,6 +59,11 @@
     <Compile Include="TestParserForVariables.cs" />
     <Compile Include="TestParserForFunctions.cs" />
     <Compile Include="TestParserForEntriesWithSign.cs" />
+    <Compile Include="TestPowerExpression.cs" />
+    <Compile Include="TestParserForPower.cs" />
+    <Compile Include="TestParserForParentheses.cs" />
+    <Compile Include="TestParserForOperatorPrecedence.cs" />
+    <Compile Include="TestParserForNamedConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

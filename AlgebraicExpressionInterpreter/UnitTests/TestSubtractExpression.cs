@@ -20,7 +20,7 @@ namespace UnitTests
             SubtractExpression difference = new SubtractExpression(left, right);
 
             Context context = new Context(5);
-            Assert.AreEqual(12, difference.Interpret(context));
+            Assert.AreEqual(12, difference.Interpret(context), 1e-10);
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace UnitTests
             SubtractExpression difference = new SubtractExpression(left, right);
 
             Context context = new Context(3);
-            Assert.AreEqual(6, difference.Interpret(context));
+            Assert.AreEqual(-2, difference.Interpret(context), 1e-10);
 
         }
 
@@ -43,7 +43,7 @@ namespace UnitTests
             SubtractExpression difference = new SubtractExpression(left, right);
 
             Context context = new Context(4);
-            Assert.AreEqual(9, difference.Interpret(context));
+            Assert.AreEqual(0, difference.Interpret(context), 1e-10);
         }
     }
 }

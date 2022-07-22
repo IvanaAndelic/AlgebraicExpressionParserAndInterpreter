@@ -40,7 +40,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionIfMinusSignIsNotImmediatellyBeforeConstant()
         {
             var parser = new Parser();
@@ -48,7 +48,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionIfPlusSignIsNotImmediatellyBeforeConstant()
         {
             var parser = new Parser();
@@ -56,7 +56,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForMultipleDecimalSeparators()
         {
             var parser = new Parser();
@@ -64,7 +64,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseThrowsExceptionForConstantFollowedByCharacter()
         {
             var parser = new Parser();
@@ -72,27 +72,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
+        [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForConstantInExponentialFormat()
         {
             var parser = new Parser();
-            Assert.AreEqual(10.3e5, parser.Parse("10e5").Interpret(new Context(5)));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
-        public void ParseMethodThrowsExceptionForExpressionStartingWithRightParenthesis()
-        {
-            var parser = new Parser();
-            parser.Parse(")");
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidExpressionException))]
-        public void ParseMethodThrowsExceptionForRightParenthesisAfterConstant()
-        {
-            var parser = new Parser();
-            parser.Parse("1.23 )");
+            parser.Parse("10e5");
         }
 
         [TestMethod]
@@ -138,17 +122,6 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void ParseMethodEvaluatesResultOfSeveralOperationsOfDifferentPrecedenceOnConstants()
-        {
-            var parser = new Parser();
-            Assert.AreEqual(10, parser.Parse("2 * 3 + 4").Interpret(new Context(5)));
-            Assert.AreEqual(10, parser.Parse("4 * 3 - 2").Interpret(new Context(5)));
-            Assert.AreEqual(-10, parser.Parse("2 - 3 * 4").Interpret(new Context(5)));
-            Assert.AreEqual(-15, parser.Parse("2 - 3 * 4 - 5").Interpret(new Context(5)));
-            Assert.AreEqual(-58, parser.Parse("2 - 3 * 4 * 5").Interpret(new Context(5)));
-        }
-
-        [TestMethod]
         public void ParseMethodReturnsExpressionForAnExpressionConsistingOfOperationsOnConstantsEnclosedInParentheses()
         {
             var parser = new Parser();
@@ -156,12 +129,11 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void ParseMethodReturnsExpressionForAnExpressionConsistingOfOperationsOnConstantsWithMultipleParentheses()
+        [ExpectedException(typeof(ParserException))]
+        public void ParseMethodThrowsExceptionForIcompleteExpression()
         {
             var parser = new Parser();
-            Assert.AreEqual(-15, parser.Parse("(2 + 3) * (4 - 7)").Interpret(new Context(5)));
-            Assert.AreEqual(20, parser.Parse("5 - (2 + 3) * (4 - 7)").Interpret(new Context(5)));
-            Assert.AreEqual(-22, parser.Parse("5 - (2 + 3) * 6 - (4 - 7)").Interpret(new Context(5)));
+            parser.Parse("5 +");
         }
     }
 }

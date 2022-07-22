@@ -55,5 +55,37 @@ namespace UnitTests
             Parser parser = new Parser();
             Assert.AreEqual(-Math.Sqrt(2), parser.Parse("-sqrt(2)").Interpret(new Context(3.1415926535897932384626433832795)), 1e-10);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void ParseMethodThrowsExceptionForAFunctionWithEmptyParentheses()
+        {
+            var parser = new Parser();
+            parser.Parse(" sin() ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void ParseMethodThrowsExceptionForASignBetweenFunctionNameAndParentheses()
+        {
+            var parser = new Parser();
+            parser.Parse(" sin-(2) ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void ParseMethodThrowsExceptionForMissingRightParenthesesAfterFunction()
+        {
+            var parser = new Parser();
+            parser.Parse(" sin(2 ");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ParserException))]
+        public void ParseMethodThrowsExceptionForOnlyLeftParenthesisAfterFunction()
+        {
+            var parser = new Parser();
+            parser.Parse(" sin( ");
+        }
     }
 }
