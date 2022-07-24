@@ -1,22 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AlgebraicExpressionInterpreter;
+﻿using AlgebraicExpressionInterpreter;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests
+namespace Expressions
 {
     [TestClass]
-    public class TestSumExpression
+    public class SumExpression
     {
         [TestMethod]
         public void SumExpressionInterpretForTwoConstantsReturnsTheirSum()
         {
             Constant left = new Constant(23);
             Constant right = new Constant(2);
-            SumExpression sum = new SumExpression(left, right);
+            var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(3);
             Assert.AreEqual(25, sum.Interpret(context));
@@ -27,12 +22,11 @@ namespace UnitTests
         {
             IExpression left = new VariableX();
             IExpression right = new Constant(2);
-            SumExpression sum = new SumExpression(left, right);
+            var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(3);
             Assert.AreEqual(5, sum.Interpret(context));
             Assert.AreEqual(7, sum.Interpret(new Context(5)));
-
         }
 
         [TestMethod]
@@ -40,7 +34,7 @@ namespace UnitTests
         {
             IExpression left = new VariableX();
             IExpression right = new VariableX();
-            SumExpression sum = new SumExpression(left, right);
+            var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(4);
             Assert.AreEqual(8, sum.Interpret(context));
@@ -53,14 +47,11 @@ namespace UnitTests
             IExpression second = new Constant(2);
             IExpression third = new Constant(5);
 
-
-
-            SumExpression sum = new SumExpression(second, third);
-            MultiplyExpression multi = new MultiplyExpression(first, sum);
+            var sum = new AlgebraicExpressionInterpreter.SumExpression(second, third);
+            var multi = new AlgebraicExpressionInterpreter.MultiplyExpression(first, sum);
 
             Context context = new Context(4);
             Assert.AreEqual(28, multi.Interpret(context));
         }
-
     }
 }

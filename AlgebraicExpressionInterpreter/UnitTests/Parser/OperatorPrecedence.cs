@@ -1,17 +1,15 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using AlgebraicExpressionParser;
-using AlgebraicExpressionInterpreter;
+﻿using AlgebraicExpressionInterpreter;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests
+namespace Parser
 {
     [TestClass]
-    public class TestParserForOperatorPrecedence
+    public class OperatorPrecedence
     {
         [TestMethod]
         public void ParseMethodEvaluatesResultOfExpressionWithConstantsThatHasLowerLevelOperandsAtTheEnd()
         {
-            var parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(2, parser.Parse("18 / 3 - 4").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(10, parser.Parse("4 * 3 - 2").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(-15, parser.Parse("2 - 3 * 4 - 5").Interpret(new Context(5)), 1e-10);
@@ -33,7 +31,7 @@ namespace UnitTests
         [TestMethod]
         public void ParseMethodEvaluatesResultOfExpressionWithConstantsThatHasHigherLevelOperandsAtTheEnd()
         {
-            var parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(-10, parser.Parse("2 - 3 * 4").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(-40, parser.Parse("2 - 3 * 4 - 5 * 6").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(-58, parser.Parse("2 - 3 * 4 * 5").Interpret(new Context(5)), 1e-10);
@@ -48,7 +46,7 @@ namespace UnitTests
         [TestMethod]
         public void ParseMethodEvaluatesResultOfExpressionWithConstantsThatHasHigherLevelOperandsInTheMiddle()
         {
-            var parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(-15, parser.Parse("2 - 3 * 4 - 5").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(-5, parser.Parse("2 - 3 * 4 / 6 - 5").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(-11, parser.Parse("2 - 6 / 3 * 4 - 5").Interpret(new Context(5)), 1e-10);

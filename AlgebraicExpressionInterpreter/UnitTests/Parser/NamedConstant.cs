@@ -3,15 +3,15 @@ using System;
 using AlgebraicExpressionParser;
 using AlgebraicExpressionInterpreter;
 
-namespace UnitTests
+namespace Parser
 {
     [TestClass]
-    public class TestParserForNamedConstants
+    public class NamedConstant
     {
         [TestMethod]
         public void ParserReturnsValueOfPi()
         {
-            Parser parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(Math.PI, parser.Parse("PI").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(Math.PI, parser.Parse(" PI ").Interpret(new Context(5)), 1e-10);
         }
@@ -19,14 +19,14 @@ namespace UnitTests
         [TestMethod]
         public void ParserEvaluatesExpressionWithPi()
         {
-            Parser parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(-1, parser.Parse("cos(PI)").Interpret(new Context(5)), 1e-10);
         }
 
         [TestMethod]
         public void ParserReturnsValueOfE()
         {
-            Parser parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(Math.E, parser.Parse("E").Interpret(new Context(5)), 1e-10);
             Assert.AreEqual(Math.E, parser.Parse(" E ").Interpret(new Context(5)), 1e-10);
         }
@@ -34,7 +34,7 @@ namespace UnitTests
         [TestMethod]
         public void ParserEvaluatesExpressionWithE()
         {
-            Parser parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             Assert.AreEqual(Math.Exp(2), parser.Parse("E ^ 2").Interpret(new Context(5)), 1e-10);
         }
 
@@ -42,7 +42,7 @@ namespace UnitTests
         [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForUnsupportedNamedConstant()
         {
-            var parser = new Parser();
+            var parser = new AlgebraicExpressionParser.Parser();
             parser.Parse(" sin(F) ");
         }
     }

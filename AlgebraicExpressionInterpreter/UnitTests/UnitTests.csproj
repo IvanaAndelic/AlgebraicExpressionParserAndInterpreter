@@ -49,21 +49,21 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="TestMathFunction.cs" />
+    <Compile Include="Expressions\MathFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestSubtractExpression.cs" />
-    <Compile Include="TestSumExpression.cs" />
-    <Compile Include="TestMultiplyExpression.cs" />
-    <Compile Include="TestDivideExpression.cs" />
-    <Compile Include="TestParserForConstants.cs" />
-    <Compile Include="TestParserForVariables.cs" />
-    <Compile Include="TestParserForFunctions.cs" />
-    <Compile Include="TestParserForEntriesWithSign.cs" />
-    <Compile Include="TestPowerExpression.cs" />
-    <Compile Include="TestParserForPower.cs" />
-    <Compile Include="TestParserForParentheses.cs" />
-    <Compile Include="TestParserForOperatorPrecedence.cs" />
-    <Compile Include="TestParserForNamedConstants.cs" />
+    <Compile Include="Expressions\SubtractExpression.cs" />
+    <Compile Include="Expressions\SumExpression.cs" />
+    <Compile Include="Expressions\MultiplyExpression.cs" />
+    <Compile Include="Expressions\DivideExpression.cs" />
+    <Compile Include="Parser\Constant.cs" />
+    <Compile Include="Parser\Variables.cs" />
+    <Compile Include="Parser\Function.cs" />
+    <Compile Include="Parser\Sign.cs" />
+    <Compile Include="Expressions\PowerExpression.cs" />
+    <Compile Include="Parser\Power.cs" />
+    <Compile Include="Parser\Parentheses.cs" />
+    <Compile Include="Parser\OperatorPrecedence.cs" />
+    <Compile Include="Parser\NamedConstant.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

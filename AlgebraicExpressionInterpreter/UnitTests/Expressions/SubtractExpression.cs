@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AlgebraicExpressionInterpreter;
+﻿using AlgebraicExpressionInterpreter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests
+namespace Expressions
 {
     [TestClass]
-    public class TestSubtractExpression
+    public class SubtractExpression
     {
-
         [TestMethod]
         public void SubtractExpressionInterpretForTwoConstantsReturnsTheirDifference()
         {
             Constant left = new Constant(16);
             Constant right = new Constant(4);
-            SubtractExpression difference = new SubtractExpression(left, right);
+            var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(5);
             Assert.AreEqual(12, difference.Interpret(context), 1e-10);
@@ -28,11 +22,10 @@ namespace UnitTests
         {
             IExpression left = new VariableX();
             IExpression right = new Constant(5);
-            SubtractExpression difference = new SubtractExpression(left, right);
+            var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(3);
             Assert.AreEqual(-2, difference.Interpret(context), 1e-10);
-
         }
 
         [TestMethod]
@@ -40,7 +33,7 @@ namespace UnitTests
         {
             IExpression left = new VariableX();
             IExpression right = new VariableX();
-            SubtractExpression difference = new SubtractExpression(left, right);
+            var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(4);
             Assert.AreEqual(0, difference.Interpret(context), 1e-10);
