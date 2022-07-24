@@ -131,8 +131,15 @@ namespace Parser
         [ExpectedException(typeof(ParserException))]
         public void ParseMethodThrowsExceptionForIcompleteExpression()
         {
+<<<<<<< HEAD:AlgebraicExpressionInterpreter/UnitTests/Parser/Constant.cs
             var parser = new AlgebraicExpressionParser.Parser();
             parser.Parse("5 +");
+=======
+            var parser = new Parser();
+            Assert.AreEqual(-15, parser.Parse("(2 + 3) * (4 - 7)").Interpret(new Context(5)));
+            Assert.AreEqual(20, parser.Parse("5 - (2 + 3) * (4 - 7)").Interpret(new Context(5)));
+            Assert.AreEqual(-22, parser.Parse("5 - (2 + 3) * 6 - (4 - 7)").Interpret(new Context(5)));
+>>>>>>> 1cd9b3a (Add enumerations for additional functions):AlgebraicExpressionInterpreter/UnitTests/TestParserForConstants.cs
         }
     }
 }

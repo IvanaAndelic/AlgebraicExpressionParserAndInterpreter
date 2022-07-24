@@ -42,22 +42,32 @@ namespace AlgebraicExpressionParser
             Cos,
             Tan,
             Sqrt,
+            Cbrt, //kubni korijen
+            Exp,
             Ln,
             Log,
             Asin,
             Acos,
             Atan,
+            Sinh,
+            Cosh,
+            Tanh,
+            Asinh,
+            Acosh,
+            Atanh,
+            Abs,
         }
 
-        //popuniti
         /// <summary>
         ///   Mapping of <c>Operator</c> enumeration to function delegates.
         /// </summary>
+        ///(Add enumerations for additional functions)
         private readonly Dictionary<Operator, MathFunction.Fun> functionMap = new Dictionary<Operator, MathFunction.Fun> {
             { Operator.Sin, Math.Sin },
             { Operator.Cos, Math.Cos },
             { Operator.Sqrt, Math.Sqrt },
         };
+       
 
         /// <summary>
         ///   Stack with operators to be processed. On successful parsing this 
