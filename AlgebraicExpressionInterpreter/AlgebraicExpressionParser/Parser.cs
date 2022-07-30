@@ -22,7 +22,8 @@ namespace AlgebraicExpressionParser
             ReadingOperator,
             ReadingConstant,
             ReadingVariable,
-            ReadingFunction
+            ReadingFunction,
+            ReadingNamedConstant
         }
 
         /// <summary>
@@ -177,6 +178,10 @@ namespace AlgebraicExpressionParser
                     case ParserState.ReadingFunction:
                         PushFunction(text, ref pos);
                         state = ParserState.SkippingWhiteSpacesAfterOperator;
+                        break;
+                    case ParserState.ReadingNamedConstant:
+                        PushNamedConstant(text, ref pos);
+                        state = ParserState.SkippingWhiteSpacesBeforeOperator;
                         break;
                 }
             }
@@ -441,6 +446,23 @@ namespace AlgebraicExpressionParser
             output.Push(new Constant(value));
         }
 
+        private void PushNamedConstant(string text, ref int pos)
+        {
+            string constantName = GetIdentifier(text, pos);
+            switch (constantName)
+            {
+                case "E":
+                    pos += 1;
+                    output.Push(new Constant(Math.E));
+                    return;
+                case "PI":
+                    pos += 2;
+                    output.Push(new Constant(Math.PI));
+                    return;
+            }
+            throw new ParserException("Unknown named constant", pos);
+        }
+
         /// <summary>
         ///   Evaluates next state after operator was read.
         /// </summary>
@@ -467,7 +489,10 @@ namespace AlgebraicExpressionParser
             {
                 // If identifier is folowed by parenthesis, it must be a function.
                 if (pos + identifier.Length < text.Length && text[pos + identifier.Length] == '(')
+                {
                     return ParserState.ReadingFunction;
+                }
+                return ParserState.ReadingNamedConstant;
             }
             throw new ParserException("Unexpected character", pos);
         }
