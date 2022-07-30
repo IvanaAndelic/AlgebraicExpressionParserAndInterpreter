@@ -34,6 +34,7 @@ namespace AlgebraicExpressionParser
             Subtraction,
             Multiplication,
             Division,
+            Power,
             LeftParenthesis,
             Minus,
 
@@ -152,6 +153,10 @@ namespace AlgebraicExpressionParser
                                 PushOperator(Operator.Division);
                                 state = ParserState.SkippingWhiteSpacesAfterOperator;
                                 break;
+                            case '^':
+                                PushOperator(Operator.Power);
+                                state = ParserState.SkippingWhiteSpacesAfterOperator;
+                                break;
                             case ')':
                                 ProcessRightParenthesis(pos);
                                 break;
@@ -197,11 +202,13 @@ namespace AlgebraicExpressionParser
                 case Operator.Multiplication:
                 case Operator.Division:
                     return 2;
+                case Operator.Power:
+                    return 3;
                 case Operator.LeftParenthesis:
                 case Operator.Minus:
-                    return 3;
+                    return 4;
             }
-            return 4;
+            return 5;
         }
 
         /// <summary>
@@ -266,6 +273,7 @@ namespace AlgebraicExpressionParser
                     case Operator.Subtraction:
                     case Operator.Multiplication:
                     case Operator.Division:
+                    case Operator.Power:
                         endExpressions.Push(output.Pop());
                         break;
                 }
@@ -350,6 +358,8 @@ namespace AlgebraicExpressionParser
                     return new MultiplyExpression(lhs, rhs);
                 case Operator.Division:
                     return new DivideExpression(lhs, rhs);
+                case Operator.Power:
+                    return new PowerExpression(lhs, rhs);
             }
             Debug.Assert(false);
             return null;

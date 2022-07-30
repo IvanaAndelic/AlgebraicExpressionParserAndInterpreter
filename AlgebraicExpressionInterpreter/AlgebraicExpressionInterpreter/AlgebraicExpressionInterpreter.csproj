@@ -48,6 +48,7 @@
     <Compile Include="IExpression.cs" />
     <Compile Include="MathFunction.cs" />
     <Compile Include="MultiplyExpression.cs" />
+    <Compile Include="PowerExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubtractExpression.cs" />
     <Compile Include="SumExpression.cs" />
