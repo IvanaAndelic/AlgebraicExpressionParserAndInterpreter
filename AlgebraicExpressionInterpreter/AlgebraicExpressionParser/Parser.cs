@@ -68,6 +68,45 @@ namespace AlgebraicExpressionParser
             { Operator.Sin, Math.Sin },
             { Operator.Cos, Math.Cos },
             { Operator.Sqrt, Math.Sqrt },
+           // {Operator.Cbrt, Math.Cbrt },
+            {Operator.Exp, Math.Exp },
+            {Operator.Ln, Math.Log },
+            {Operator.Log, Math.Log10 },
+            {Operator.Asin, Math.Asin },
+            {Operator.Acos, Math.Acos },
+            {Operator.Atan, Math.Atan },
+            {Operator.Sinh, Math.Sinh },
+            {Operator.Cosh, Math.Cosh },
+            {Operator.Tanh, Math.Tanh },
+            //{Operator.Asinh, Math.Asinh},
+            //{Operator.Acosh, Math.Acosh },
+           // {Operator.Atanh, Math.Atanh },
+            {Operator.Abs, Math.Abs }
+
+
+
+        };
+
+        private readonly Dictionary<string, Operator> functionTokenMap = new Dictionary<string, Operator>
+        {
+            {"sin", Operator.Sin },
+            {"cos", Operator.Cos },
+            {"tan", Operator.Tan },
+            {"sqrt", Operator.Sqrt },
+            {"cbrt", Operator.Cbrt },
+            {"exp", Operator.Exp },
+            {"ln", Operator.Ln },
+            {"log", Operator.Log },
+            {"asin", Operator.Asin },
+            {"acos", Operator.Acos },
+            {"atan", Operator.Atan },
+            {"sinh", Operator.Sinh },
+            {"cosh", Operator.Cosh },
+            {"tanh", Operator.Tanh },
+            {"asinh", Operator.Asinh },
+            {"acosh", Operator.Acosh },
+            {"atanh", Operator.Atanh },
+            {"abs", Operator.Abs }
         };
        
 
@@ -395,26 +434,10 @@ namespace AlgebraicExpressionParser
         private Operator ResolveFunction(string text, ref int pos)
         {
             string functionName = GetIdentifier(text, pos);
-            switch (functionName)
+
+            if(functionTokenMap.TryGetValue(functionName,out Operator function))
             {
-                case "sin":
-                    pos += 3;
-                    return Operator.Sin;
-                case "cos":
-                    pos += 3;
-                    return Operator.Cos;
-                case "tan":
-                    pos += 3;
-                    return Operator.Tan;
-                case "sqrt":
-                    pos += 4;
-                    return Operator.Sqrt;
-                case "ln":
-                    pos += 2;
-                    return Operator.Ln;
-                case "log":
-                    pos += 3;
-                    return Operator.Log;
+                return function;
             }
             throw new ParserException("Unknown function", pos);
         }
