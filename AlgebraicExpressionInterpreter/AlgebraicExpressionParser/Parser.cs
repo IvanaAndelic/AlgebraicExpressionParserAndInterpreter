@@ -437,6 +437,7 @@ namespace AlgebraicExpressionParser
 
             if(functionTokenMap.TryGetValue(functionName,out Operator function))
             {
+                pos += functionName.Length;
                 return function;
             }
             throw new ParserException("Unknown function", pos);
