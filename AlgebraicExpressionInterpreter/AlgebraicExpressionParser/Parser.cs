@@ -60,6 +60,11 @@ namespace AlgebraicExpressionParser
             Abs,
         }
 
+        private enum namedConstant {
+           E, 
+           PI
+        }
+
         /// <summary>
         ///   Mapping of <c>Operator</c> enumeration to function delegates.
         /// </summary>
@@ -108,7 +113,12 @@ namespace AlgebraicExpressionParser
             {"atanh", Operator.Atanh },
             {"abs", Operator.Abs }
         };
-       
+
+        private readonly Dictionary<string, Constant> namedConstantsToken = new Dictionary<string, Constant>
+        {
+            {"E", Constant.E },
+            {"PI", Constant.PI }
+        };
 
         /// <summary>
         ///   Stack with operators to be processed. On successful parsing this 
@@ -175,34 +185,7 @@ namespace AlgebraicExpressionParser
                         {
                             break;
                         }
-                        switch (text[pos])
-                        {
-                            case '+':
-                                PushOperator(Operator.Addition);
-                                state = ParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '-':
-                                PushOperator(Operator.Subtraction);
-                                state = ParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '*':
-                                PushOperator(Operator.Multiplication);
-                                state = ParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '/':
-                                PushOperator(Operator.Division);
-                                state = ParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case '^':
-                                PushOperator(Operator.Power);
-                                state = ParserState.SkippingWhiteSpacesAfterOperator;
-                                break;
-                            case ')':
-                                ProcessRightParenthesis(pos);
-                                break;
-                            default:
-                                throw new ParserException("Invalid operator", pos);
-                        }
+                        state = ProcessOperator(text, pos);
                         ++pos;
                         break;
                     case ParserState.ReadingVariable:
@@ -229,6 +212,35 @@ namespace AlgebraicExpressionParser
                 throw new ParserException("Expression terminated unexpectedly", text.Length);
             }
             return FinalExpression();
+        }
+
+        private ParserState ProcessOperator(string text, int pos)
+        {
+            switch (text[pos])
+            {
+                case ')':
+                    ProcessRightParenthesis(pos);
+                    return ParserState.SkippingWhiteSpacesBeforeOperator;
+                case '+':
+                    PushOperator(Operator.Addition);
+                    break;
+                case '-':
+                    PushOperator(Operator.Subtraction);
+                    break;
+                case '*':
+                    PushOperator(Operator.Multiplication);
+                    break;
+                case '/':
+                    PushOperator(Operator.Division);
+                    break;
+                case '^':
+                    PushOperator(Operator.Power);
+                    break;
+                default:
+                    throw new ParserException("Invalid operator", pos);
+            }
+
+            return ParserState.SkippingWhiteSpacesAfterOperator;
         }
 
         /// <summary>
@@ -470,20 +482,25 @@ namespace AlgebraicExpressionParser
             output.Push(new Constant(value));
         }
 
-        private void PushNamedConstant(string text, ref int pos)
+        private Constant PushNamedConstant(string text, ref int pos)
         {
             string constantName = GetIdentifier(text, pos);
-            switch (constantName)
-            {
-                case "E":
-                    pos += 1;
-                    output.Push(new Constant(Math.E));
-                    return;
-                case "PI":
-                    pos += 2;
-                    output.Push(new Constant(Math.PI));
-                    return;
+
+            if(namedConstantsToken.TryGetValue(constantName, out Constant constant)){
+                pos += constantName.Length;
+                return constant;
             }
+            //switch (constantname)
+            //{
+            //    case "e":
+            //        pos += 1;
+            //        output.push(new constant(math.e));
+            //        return;
+            //    case "pi":
+            //        pos += 2;
+            //        output.push(new constant(math.pi));
+            //        return;
+            //}
             throw new ParserException("Unknown named constant", pos);
         }
 
