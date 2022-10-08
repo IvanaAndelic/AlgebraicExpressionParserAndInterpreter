@@ -97,15 +97,17 @@ namespace GUI2
             // 
             this.textBoxErrors.Location = new System.Drawing.Point(236, 390);
             this.textBoxErrors.Name = "textBoxErrors";
+            this.textBoxErrors.ReadOnly = true;
             this.textBoxErrors.Size = new System.Drawing.Size(396, 20);
-            this.textBoxErrors.TabIndex = 13;
+            this.textBoxErrors.TabIndex = 11;
+            this.textBoxErrors.TabStop = false;
             // 
             // button1Evaluate
             // 
             this.button1Evaluate.Location = new System.Drawing.Point(119, 178);
             this.button1Evaluate.Name = "button1Evaluate";
             this.button1Evaluate.Size = new System.Drawing.Size(75, 23);
-            this.button1Evaluate.TabIndex = 14;
+            this.button1Evaluate.TabIndex = 9;
             this.button1Evaluate.Text = "Evaluate";
             this.button1Evaluate.UseVisualStyleBackColor = true;
             this.button1Evaluate.Click += new System.EventHandler(this.button1Evaluate_Click);
@@ -115,7 +117,7 @@ namespace GUI2
             this.textBoxIntervalsNumber.Location = new System.Drawing.Point(532, 152);
             this.textBoxIntervalsNumber.Name = "textBoxIntervalsNumber";
             this.textBoxIntervalsNumber.Size = new System.Drawing.Size(100, 20);
-            this.textBoxIntervalsNumber.TabIndex = 16;
+            this.textBoxIntervalsNumber.TabIndex = 8;
             // 
             // label7
             // 
@@ -123,7 +125,7 @@ namespace GUI2
             this.label7.Location = new System.Drawing.Point(442, 152);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(18, 13);
-            this.label7.TabIndex = 15;
+            this.label7.TabIndex = 7;
             this.label7.Text = "N:";
             // 
             // listViewExpressionValues
@@ -137,7 +139,7 @@ namespace GUI2
             this.listViewExpressionValues.Location = new System.Drawing.Point(301, 205);
             this.listViewExpressionValues.Name = "listViewExpressionValues";
             this.listViewExpressionValues.Size = new System.Drawing.Size(331, 167);
-            this.listViewExpressionValues.TabIndex = 17;
+            this.listViewExpressionValues.TabIndex = 10;
             this.listViewExpressionValues.UseCompatibleStateImageBehavior = false;
             this.listViewExpressionValues.View = System.Windows.Forms.View.Details;
             // 
