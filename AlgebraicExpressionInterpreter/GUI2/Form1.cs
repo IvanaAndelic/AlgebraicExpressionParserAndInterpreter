@@ -28,46 +28,53 @@ namespace GUI2
         {
             try
             {
-                expression = parser.Parse(EnterFunctionTextBox1.Text);
+                expression = parser.Parse(textBoxFunction.Text);
+                textBoxErrors.Clear();
             }
-
             catch(ParserException pe)
             {
                 textBoxErrors.Text = pe.Message;
             }
         }
 
-        private void richTextBox1Fx_TextChanged(object sender, EventArgs e)
-        {
-            var x_start =Double.Parse(ValueForX0TextBox1.Text);
-            var x_end = Double.Parse(ValueForXnTextBox1.Text);
-
-            for (var i = x_start; i <= x_end; ++i)
-            {
-                var result = expression.Interpret(new Context(i));
-                richTextBox1Fx.Text = result.ToString();
-            }
-
-        }
-
-
-
-        private void richTextBox2_TextChanged(object sender, EventArgs e)
-        {
-            var x_start = Double.Parse(ValueForX0TextBox1.Text);
-            var x_end =Double.Parse(ValueForXnTextBox1.Text);
-
-            for (var i = x_start; i <= x_end; ++i)
-            {
-                richTextBox2.Text = i.ToString();
-            }
-        }
-
         private void button1Evaluate_Click(object sender, EventArgs e)
         {
-            richTextBox1Fx_TextChanged(sender, e);
-            richTextBox2_TextChanged(sender, e);
+            listBoxXvalues.Items.Clear();
+            listBoxExpressionValues.Items.Clear();
 
+            if (expression==null || textBoxFunction.TextLength == 0)
+            {
+                MessageBox.Show("Invalid expression");
+                return;
+            }
+            if(double.TryParse(textBoxValueForX0.Text, out double x0) == false)
+            {
+                MessageBox.Show("Invalid x0");
+                return;
+            } 
+            if(double.TryParse(textBoxValueForXn.Text, out double xn) == false)
+            {
+                MessageBox.Show("Invalid xn");
+                return;
+            }
+            //TODO:Check if x0 and xn valid
+            if(int.TryParse(textBoxIntervalsNumber.Text, out int n) == false)
+            {
+                MessageBox.Show("Invalid n");
+                return;
+            }
+            if (n <= 0)
+            {
+                MessageBox.Show("Invalid n");
+                return;
+            }
+            for(int i=0; i <= n; ++i)
+            {
+                double x = (xn - x0) / n * i;
+                double y=expression.Interpret(new Context(x));
+                listBoxXvalues.Items.Add(x);
+                listBoxExpressionValues.Items.Add(y);
+            }
         }
     }
 }

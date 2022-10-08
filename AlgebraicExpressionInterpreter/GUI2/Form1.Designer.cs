@@ -31,17 +31,19 @@ namespace GUI2
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.EnterFunctionTextBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxFunction = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.ValueForX0TextBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxValueForX0 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.ValueForXnTextBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxValueForXn = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.richTextBox1Fx = new System.Windows.Forms.RichTextBox();
-            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.button1Evaluate = new System.Windows.Forms.Button();
+            this.textBoxIntervalsNumber = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.listBoxExpressionValues = new System.Windows.Forms.ListBox();
+            this.listBoxXvalues = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
@@ -62,13 +64,13 @@ namespace GUI2
             this.label2.TabIndex = 1;
             this.label2.Text = "Unos Funkcije";
             // 
-            // EnterFunctionTextBox1
+            // textBoxFunction
             // 
-            this.EnterFunctionTextBox1.Location = new System.Drawing.Point(301, 73);
-            this.EnterFunctionTextBox1.Name = "EnterFunctionTextBox1";
-            this.EnterFunctionTextBox1.Size = new System.Drawing.Size(100, 20);
-            this.EnterFunctionTextBox1.TabIndex = 2;
-            this.EnterFunctionTextBox1.TextChanged += new System.EventHandler(this.EnterFunctionTextBox1_TextChanged);
+            this.textBoxFunction.Location = new System.Drawing.Point(301, 73);
+            this.textBoxFunction.Name = "textBoxFunction";
+            this.textBoxFunction.Size = new System.Drawing.Size(100, 20);
+            this.textBoxFunction.TabIndex = 2;
+            this.textBoxFunction.TextChanged += new System.EventHandler(this.EnterFunctionTextBox1_TextChanged);
             // 
             // label3
             // 
@@ -79,12 +81,12 @@ namespace GUI2
             this.label3.TabIndex = 3;
             this.label3.Text = "Vrijednost za x0:";
             // 
-            // ValueForX0TextBox1
+            // textBoxValueForX0
             // 
-            this.ValueForX0TextBox1.Location = new System.Drawing.Point(301, 116);
-            this.ValueForX0TextBox1.Name = "ValueForX0TextBox1";
-            this.ValueForX0TextBox1.Size = new System.Drawing.Size(100, 20);
-            this.ValueForX0TextBox1.TabIndex = 4;
+            this.textBoxValueForX0.Location = new System.Drawing.Point(301, 116);
+            this.textBoxValueForX0.Name = "textBoxValueForX0";
+            this.textBoxValueForX0.Size = new System.Drawing.Size(100, 20);
+            this.textBoxValueForX0.TabIndex = 4;
             // 
             // label4
             // 
@@ -95,12 +97,12 @@ namespace GUI2
             this.label4.TabIndex = 5;
             this.label4.Text = "Vrijednost za xN";
             // 
-            // ValueForXnTextBox1
+            // textBoxValueForXn
             // 
-            this.ValueForXnTextBox1.Location = new System.Drawing.Point(532, 116);
-            this.ValueForXnTextBox1.Name = "ValueForXnTextBox1";
-            this.ValueForXnTextBox1.Size = new System.Drawing.Size(100, 20);
-            this.ValueForXnTextBox1.TabIndex = 6;
+            this.textBoxValueForXn.Location = new System.Drawing.Point(532, 116);
+            this.textBoxValueForXn.Name = "textBoxValueForXn";
+            this.textBoxValueForXn.Size = new System.Drawing.Size(100, 20);
+            this.textBoxValueForXn.TabIndex = 6;
             // 
             // label5
             // 
@@ -120,24 +122,6 @@ namespace GUI2
             this.label6.TabIndex = 9;
             this.label6.Text = "f(x):";
             // 
-            // richTextBox1Fx
-            // 
-            this.richTextBox1Fx.Location = new System.Drawing.Point(287, 188);
-            this.richTextBox1Fx.Name = "richTextBox1Fx";
-            this.richTextBox1Fx.Size = new System.Drawing.Size(114, 152);
-            this.richTextBox1Fx.TabIndex = 11;
-            this.richTextBox1Fx.Text = "";
-            this.richTextBox1Fx.TextChanged += new System.EventHandler(this.richTextBox1Fx_TextChanged);
-            // 
-            // richTextBox2
-            // 
-            this.richTextBox2.Location = new System.Drawing.Point(522, 188);
-            this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(110, 152);
-            this.richTextBox2.TabIndex = 12;
-            this.richTextBox2.Text = "";
-            this.richTextBox2.TextChanged += new System.EventHandler(this.richTextBox2_TextChanged);
-            // 
             // textBoxErrors
             // 
             this.textBoxErrors.Location = new System.Drawing.Point(236, 390);
@@ -155,22 +139,56 @@ namespace GUI2
             this.button1Evaluate.UseVisualStyleBackColor = true;
             this.button1Evaluate.Click += new System.EventHandler(this.button1Evaluate_Click);
             // 
+            // textBoxIntervalsNumber
+            // 
+            this.textBoxIntervalsNumber.Location = new System.Drawing.Point(532, 152);
+            this.textBoxIntervalsNumber.Name = "textBoxIntervalsNumber";
+            this.textBoxIntervalsNumber.Size = new System.Drawing.Size(100, 20);
+            this.textBoxIntervalsNumber.TabIndex = 16;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(442, 152);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.TabIndex = 15;
+            this.label7.Text = "N:";
+            // 
+            // listBoxExpressionValues
+            // 
+            this.listBoxExpressionValues.FormattingEnabled = true;
+            this.listBoxExpressionValues.Location = new System.Drawing.Point(281, 188);
+            this.listBoxExpressionValues.Name = "listBoxExpressionValues";
+            this.listBoxExpressionValues.Size = new System.Drawing.Size(120, 173);
+            this.listBoxExpressionValues.TabIndex = 17;
+            // 
+            // listBoxXvalues
+            // 
+            this.listBoxXvalues.FormattingEnabled = true;
+            this.listBoxXvalues.Location = new System.Drawing.Point(512, 188);
+            this.listBoxXvalues.Name = "listBoxXvalues";
+            this.listBoxXvalues.Size = new System.Drawing.Size(120, 173);
+            this.listBoxXvalues.TabIndex = 18;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.listBoxXvalues);
+            this.Controls.Add(this.listBoxExpressionValues);
+            this.Controls.Add(this.textBoxIntervalsNumber);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.button1Evaluate);
             this.Controls.Add(this.textBoxErrors);
-            this.Controls.Add(this.richTextBox2);
-            this.Controls.Add(this.richTextBox1Fx);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.ValueForXnTextBox1);
+            this.Controls.Add(this.textBoxValueForXn);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.ValueForX0TextBox1);
+            this.Controls.Add(this.textBoxValueForX0);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.EnterFunctionTextBox1);
+            this.Controls.Add(this.textBoxFunction);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
@@ -184,17 +202,19 @@ namespace GUI2
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox EnterFunctionTextBox1;
+        private System.Windows.Forms.TextBox textBoxFunction;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox ValueForX0TextBox1;
+        private System.Windows.Forms.TextBox textBoxValueForX0;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox ValueForXnTextBox1;
+        private System.Windows.Forms.TextBox textBoxValueForXn;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.RichTextBox richTextBox1Fx;
-        private System.Windows.Forms.RichTextBox richTextBox2;
         private System.Windows.Forms.TextBox textBoxErrors;
         private System.Windows.Forms.Button button1Evaluate;
+        private System.Windows.Forms.TextBox textBoxIntervalsNumber;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ListBox listBoxExpressionValues;
+        private System.Windows.Forms.ListBox listBoxXvalues;
     }
 }
 

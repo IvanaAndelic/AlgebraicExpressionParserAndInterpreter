@@ -116,8 +116,8 @@ namespace AlgebraicExpressionParser
 
         private readonly Dictionary<string, Constant> namedConstantsToken = new Dictionary<string, Constant>
         {
-            {"E", Constant.E },
-            {"PI", Constant.PI }
+            {"E", new Constant(Math.E) },
+            {"PI", new Constant(Math.PI) }
         };
 
         /// <summary>
