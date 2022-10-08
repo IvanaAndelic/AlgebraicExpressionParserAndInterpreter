@@ -39,8 +39,7 @@ namespace GUI2
 
         private void button1Evaluate_Click(object sender, EventArgs e)
         {
-            listBoxXvalues.Items.Clear();
-            listBoxExpressionValues.Items.Clear();
+            listViewExpressionValues.Items.Clear();
 
             if (expression==null || textBoxFunction.TextLength == 0)
             {
@@ -72,8 +71,7 @@ namespace GUI2
             {
                 double x = (xn - x0) / n * i;
                 double y=expression.Interpret(new Context(x));
-                listBoxXvalues.Items.Add(x);
-                listBoxExpressionValues.Items.Add(y);
+                listViewExpressionValues.Items.Add(new ListViewItem(new string[] { x.ToString(),y.ToString()}));
             }
         }
     }

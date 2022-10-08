@@ -29,31 +29,20 @@ namespace GUI2
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxFunction = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxValueForX0 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxValueForXn = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.button1Evaluate = new System.Windows.Forms.Button();
             this.textBoxIntervalsNumber = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.listBoxExpressionValues = new System.Windows.Forms.ListBox();
-            this.listBoxXvalues = new System.Windows.Forms.ListBox();
+            this.listViewExpressionValues = new System.Windows.Forms.ListView();
+            this.columnHeaderX = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderExpressionValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "label1";
             // 
             // label2
             // 
@@ -104,24 +93,6 @@ namespace GUI2
             this.textBoxValueForXn.Size = new System.Drawing.Size(100, 20);
             this.textBoxValueForXn.TabIndex = 6;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(442, 188);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(40, 13);
-            this.label5.TabIndex = 7;
-            this.label5.Text = "X(0-N):";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(213, 188);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(24, 13);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "f(x):";
-            // 
             // textBoxErrors
             // 
             this.textBoxErrors.Location = new System.Drawing.Point(236, 390);
@@ -155,66 +126,66 @@ namespace GUI2
             this.label7.TabIndex = 15;
             this.label7.Text = "N:";
             // 
-            // listBoxExpressionValues
+            // listViewExpressionValues
             // 
-            this.listBoxExpressionValues.FormattingEnabled = true;
-            this.listBoxExpressionValues.Location = new System.Drawing.Point(281, 188);
-            this.listBoxExpressionValues.Name = "listBoxExpressionValues";
-            this.listBoxExpressionValues.Size = new System.Drawing.Size(120, 173);
-            this.listBoxExpressionValues.TabIndex = 17;
+            this.listViewExpressionValues.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listViewExpressionValues.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderX,
+            this.columnHeaderExpressionValue});
+            this.listViewExpressionValues.FullRowSelect = true;
+            this.listViewExpressionValues.HideSelection = false;
+            this.listViewExpressionValues.Location = new System.Drawing.Point(301, 205);
+            this.listViewExpressionValues.Name = "listViewExpressionValues";
+            this.listViewExpressionValues.Size = new System.Drawing.Size(331, 167);
+            this.listViewExpressionValues.TabIndex = 17;
+            this.listViewExpressionValues.UseCompatibleStateImageBehavior = false;
+            this.listViewExpressionValues.View = System.Windows.Forms.View.Details;
             // 
-            // listBoxXvalues
+            // columnHeaderX
             // 
-            this.listBoxXvalues.FormattingEnabled = true;
-            this.listBoxXvalues.Location = new System.Drawing.Point(512, 188);
-            this.listBoxXvalues.Name = "listBoxXvalues";
-            this.listBoxXvalues.Size = new System.Drawing.Size(120, 173);
-            this.listBoxXvalues.TabIndex = 18;
+            this.columnHeaderX.Text = "X";
+            // 
+            // columnHeaderExpressionValue
+            // 
+            this.columnHeaderExpressionValue.Text = "Value";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.listBoxXvalues);
-            this.Controls.Add(this.listBoxExpressionValues);
+            this.Controls.Add(this.listViewExpressionValues);
             this.Controls.Add(this.textBoxIntervalsNumber);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.button1Evaluate);
             this.Controls.Add(this.textBoxErrors);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.textBoxValueForXn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxValueForX0);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxFunction);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Evaluate Expression";
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxFunction;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxValueForX0;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxValueForXn;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox textBoxErrors;
         private System.Windows.Forms.Button button1Evaluate;
         private System.Windows.Forms.TextBox textBoxIntervalsNumber;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ListBox listBoxExpressionValues;
-        private System.Windows.Forms.ListBox listBoxXvalues;
+        private System.Windows.Forms.ListView listViewExpressionValues;
+        private System.Windows.Forms.ColumnHeader columnHeaderX;
+        private System.Windows.Forms.ColumnHeader columnHeaderExpressionValue;
     }
 }
 
