@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlgebraicExpressionParser;
 using AlgebraicExpressionInterpreter;
+using System.Globalization;
 
 namespace GUI2
 {
@@ -46,12 +47,12 @@ namespace GUI2
                 MessageBox.Show("Invalid expression");
                 return;
             }
-            if(double.TryParse(textBoxValueForX0.Text, out double x0) == false)
+            if(double.TryParse(textBoxValueForX0.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double x0) == false)
             {
                 MessageBox.Show("Invalid x0");
                 return;
             } 
-            if(double.TryParse(textBoxValueForXn.Text, out double xn) == false)
+            if(double.TryParse(textBoxValueForXn.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double xn) == false)
             {
                 MessageBox.Show("Invalid xn");
                 return;
