@@ -24,7 +24,7 @@ namespace GUI
         {
             try
             {
-                expression = parser.Parse(textBoxEquation.Text);
+                expression = parser.Parse(textBoxExpression.Text);
                 textBoxErrors.Clear();
 
             }
@@ -37,10 +37,18 @@ namespace GUI
 
         private void EvaluateButtonClick(object sender, EventArgs e)
         {
-            var x = Double.Parse(textBoxValueForX.Text);
-            var result=expression.Interpret(new Context(x));
-            textBoxResult.Text = result.ToString();
+            //var x = Double.Parse(textBoxValueForX.Text);
+            //var result=expression.Interpret(new Context(x));
+            //textBoxResult.Text = result.ToString();
 
+        }
+
+        private void button1Evaluate_Click(object sender, EventArgs e)
+        {
+            functionGridView.XLeft = -3;
+            functionGridView.XRight = 3;
+            functionGridView.Expression=parser.Parse(textBoxExpression.Text);
+            functionGridView.Invalidate();
         }
     }
 }

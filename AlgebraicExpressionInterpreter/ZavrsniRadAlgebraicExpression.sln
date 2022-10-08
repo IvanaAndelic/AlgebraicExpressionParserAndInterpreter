@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlgebraicExpressionParser",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUI2", "GUI2\GUI2.csproj", "{3048A5AE-5706-4FBB-85D1-A16866C24E7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionGridView", "FunctionGridView\FunctionGridView.csproj", "{67E7F728-6EB7-4937-973F-F5725F8BF7B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{3048A5AE-5706-4FBB-85D1-A16866C24E7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3048A5AE-5706-4FBB-85D1-A16866C24E7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3048A5AE-5706-4FBB-85D1-A16866C24E7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E7F728-6EB7-4937-973F-F5725F8BF7B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E7F728-6EB7-4937-973F-F5725F8BF7B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E7F728-6EB7-4937-973F-F5725F8BF7B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E7F728-6EB7-4937-973F-F5725F8BF7B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
