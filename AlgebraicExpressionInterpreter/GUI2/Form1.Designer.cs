@@ -42,6 +42,7 @@ namespace GUI2
             this.listViewExpressionValues = new System.Windows.Forms.ListView();
             this.columnHeaderX = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderExpressionValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -49,9 +50,9 @@ namespace GUI2
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(210, 73);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 13);
+            this.label2.Size = new System.Drawing.Size(61, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Unos Funkcije";
+            this.label2.Text = "E&xpression:";
             // 
             // textBoxFunction
             // 
@@ -66,9 +67,9 @@ namespace GUI2
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(213, 116);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(84, 13);
+            this.label3.Size = new System.Drawing.Size(21, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Vrijednost za x0:";
+            this.label3.Text = "x&0:";
             // 
             // textBoxValueForX0
             // 
@@ -82,9 +83,9 @@ namespace GUI2
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(442, 116);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(83, 13);
+            this.label4.Size = new System.Drawing.Size(23, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Vrijednost za xN";
+            this.label4.Text = "x&N:";
             // 
             // textBoxValueForXn
             // 
@@ -99,7 +100,7 @@ namespace GUI2
             this.textBoxErrors.Name = "textBoxErrors";
             this.textBoxErrors.ReadOnly = true;
             this.textBoxErrors.Size = new System.Drawing.Size(396, 20);
-            this.textBoxErrors.TabIndex = 11;
+            this.textBoxErrors.TabIndex = 12;
             this.textBoxErrors.TabStop = false;
             // 
             // button1Evaluate
@@ -108,15 +109,15 @@ namespace GUI2
             this.button1Evaluate.Name = "button1Evaluate";
             this.button1Evaluate.Size = new System.Drawing.Size(75, 23);
             this.button1Evaluate.TabIndex = 9;
-            this.button1Evaluate.Text = "Evaluate";
+            this.button1Evaluate.Text = "E&valuate";
             this.button1Evaluate.UseVisualStyleBackColor = true;
             this.button1Evaluate.Click += new System.EventHandler(this.button1Evaluate_Click);
             // 
             // textBoxIntervalsNumber
             // 
-            this.textBoxIntervalsNumber.Location = new System.Drawing.Point(532, 152);
+            this.textBoxIntervalsNumber.Location = new System.Drawing.Point(574, 152);
             this.textBoxIntervalsNumber.Name = "textBoxIntervalsNumber";
-            this.textBoxIntervalsNumber.Size = new System.Drawing.Size(100, 20);
+            this.textBoxIntervalsNumber.Size = new System.Drawing.Size(58, 20);
             this.textBoxIntervalsNumber.TabIndex = 8;
             // 
             // label7
@@ -124,9 +125,9 @@ namespace GUI2
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(442, 152);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(18, 13);
+            this.label7.Size = new System.Drawing.Size(101, 13);
             this.label7.TabIndex = 7;
-            this.label7.Text = "N:";
+            this.label7.Text = "Number of &intervals:";
             // 
             // listViewExpressionValues
             // 
@@ -139,7 +140,7 @@ namespace GUI2
             this.listViewExpressionValues.Location = new System.Drawing.Point(301, 205);
             this.listViewExpressionValues.Name = "listViewExpressionValues";
             this.listViewExpressionValues.Size = new System.Drawing.Size(331, 167);
-            this.listViewExpressionValues.TabIndex = 10;
+            this.listViewExpressionValues.TabIndex = 11;
             this.listViewExpressionValues.UseCompatibleStateImageBehavior = false;
             this.listViewExpressionValues.View = System.Windows.Forms.View.Details;
             // 
@@ -151,11 +152,21 @@ namespace GUI2
             // 
             this.columnHeaderExpressionValue.Text = "Value";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(300, 189);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(95, 13);
+            this.label1.TabIndex = 10;
+            this.label1.Text = "&Expression values:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.listViewExpressionValues);
             this.Controls.Add(this.textBoxIntervalsNumber);
             this.Controls.Add(this.label7);
@@ -188,6 +199,7 @@ namespace GUI2
         private System.Windows.Forms.ListView listViewExpressionValues;
         private System.Windows.Forms.ColumnHeader columnHeaderX;
         private System.Windows.Forms.ColumnHeader columnHeaderExpressionValue;
+        private System.Windows.Forms.Label label1;
     }
 }
 
