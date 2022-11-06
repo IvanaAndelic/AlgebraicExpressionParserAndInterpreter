@@ -11,7 +11,7 @@ namespace AlgebraicExpressionInterpreter
         public VariableX()
         {
         }
-        protected override double DoInterpret(Context context)
+        protected override double DoEvaluate(Context context)
         {
             return context.X;
         }

@@ -12,7 +12,7 @@ namespace Expressions
         {
             IExpression piHalf = new Constant(Math.PI / 2.0);
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sin, piHalf);
-            Assert.AreEqual(1.0, mathFun.Interpret(new Context(3)), 1e-10);
+            Assert.AreEqual(1.0, mathFun.Evaluate(new Context(3)), 1e-10);
         }
 
         [TestMethod]
@@ -20,7 +20,7 @@ namespace Expressions
         {
             IExpression x = new VariableX();
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sin, x);
-            Assert.AreEqual(0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
+            Assert.AreEqual(0, mathFun.Evaluate(new Context(Math.PI)), 1e-10);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace Expressions
         {
             IExpression argument = new VariableX();
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sqrt, argument);
-            Assert.AreEqual(Math.Sqrt(2.0), mathFun.Interpret(new Context(2)), 1e-10);
+            Assert.AreEqual(Math.Sqrt(2.0), mathFun.Evaluate(new Context(2)), 1e-10);
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace Expressions
             IExpression xPlus2 = new AlgebraicExpressionInterpreter.SumExpression(x, new Constant(2));
             IExpression sqrtFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sqrt, xPlus2);
             IExpression sinFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sin, sqrtFun);
-            Assert.AreEqual(Math.Sin(Math.Sqrt(2 + 2)), sinFun.Interpret(new Context(2)), 1e-10);
+            Assert.AreEqual(Math.Sin(Math.Sqrt(2 + 2)), sinFun.Evaluate(new Context(2)), 1e-10);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace Expressions
         {
             IExpression pi = new Constant(Math.PI);
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Cos, pi);
-            Assert.AreEqual(-1.0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
+            Assert.AreEqual(-1.0, mathFun.Evaluate(new Context(Math.PI)), 1e-10);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Expressions
         {
             IExpression piHalf = new Constant(Math.PI / 2);
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Cos, piHalf);
-            Assert.AreEqual(0, mathFun.Interpret(new Context(Math.PI)), 1e-10);
+            Assert.AreEqual(0, mathFun.Evaluate(new Context(Math.PI)), 1e-10);
         }
 
         [TestMethod]
@@ -62,7 +62,7 @@ namespace Expressions
         {
             IExpression zero = new Constant(0);
             IExpression mathFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Cos, zero);
-            Assert.AreEqual(1, mathFun.Interpret(new Context(0)), 1e-10);
+            Assert.AreEqual(1, mathFun.Evaluate(new Context(0)), 1e-10);
         }
 
         [TestMethod]
@@ -72,7 +72,7 @@ namespace Expressions
             IExpression xPlus2 = new AlgebraicExpressionInterpreter.SumExpression(x, new Constant(2));
             IExpression sqrtFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Sqrt, xPlus2);
             IExpression cosFun = new AlgebraicExpressionInterpreter.MathFunction(Math.Cos, sqrtFun);
-            Assert.AreEqual(Math.Cos(Math.Sqrt(2 + 2)), cosFun.Interpret(new Context(2)), 1e-10);
+            Assert.AreEqual(Math.Cos(Math.Sqrt(2 + 2)), cosFun.Evaluate(new Context(2)), 1e-10);
         }
     }
 }

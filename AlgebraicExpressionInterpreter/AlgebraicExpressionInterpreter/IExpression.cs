@@ -8,7 +8,7 @@ namespace AlgebraicExpressionInterpreter
 {
     public interface IExpression
     {
-        double Interpret(Context context);
+        double Evaluate(Context context);
 
         void ToggleSign();
     }

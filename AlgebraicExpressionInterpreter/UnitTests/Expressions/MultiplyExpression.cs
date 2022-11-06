@@ -11,7 +11,7 @@ namespace Expressions
         {
             IExpression left = new Constant(5);
             IExpression right = new Constant(-2);
-            Assert.AreEqual(-10, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Interpret(new Context(24)), 1e-10);
+            Assert.AreEqual(-10, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Evaluate(new Context(24)), 1e-10);
         }
 
         [TestMethod]
@@ -19,7 +19,7 @@ namespace Expressions
         {
             IExpression left = new Constant(3);
             IExpression right = new VariableX();
-            Assert.AreEqual(15, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Interpret(new Context(5)), 1e-10);
+            Assert.AreEqual(15, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Evaluate(new Context(5)), 1e-10);
         }
 
         [TestMethod]
@@ -27,8 +27,8 @@ namespace Expressions
         {
             IExpression left = new VariableX();
             IExpression right = new VariableX();
-            Assert.AreEqual(25, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Interpret(new Context(5)), 1e-10);
-            Assert.AreEqual(64, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Interpret(new Context(8)), 1e-10);
+            Assert.AreEqual(25, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Evaluate(new Context(5)), 1e-10);
+            Assert.AreEqual(64, new AlgebraicExpressionInterpreter.MultiplyExpression(left, right).Evaluate(new Context(8)), 1e-10);
         }
     }
 }

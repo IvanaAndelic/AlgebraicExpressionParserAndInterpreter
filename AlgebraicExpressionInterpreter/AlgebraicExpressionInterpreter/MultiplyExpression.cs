@@ -17,9 +17,9 @@ namespace AlgebraicExpressionInterpreter
             this.right = right;
         }
 
-        protected override double DoInterpret(Context context)
+        protected override double DoEvaluate(Context context)
         {
-            return left.Interpret(context) * right.Interpret(context);
+            return left.Evaluate(context) * right.Evaluate(context);
         }
     }
 }

@@ -8,14 +8,14 @@ namespace AlgebraicExpressionInterpreter
 {
     public abstract class Expression : IExpression
     {
-        public double Interpret(Context context)
+        public double Evaluate(Context context)
         {
             if (isPositive)
-                return DoInterpret(context);
-            return -DoInterpret(context);
+                return DoEvaluate(context);
+            return -DoEvaluate(context);
         }
 
-        protected abstract double DoInterpret(Context context);
+        protected abstract double DoEvaluate(Context context);
 
         public void ToggleSign()
         {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AlgebraicExpressionParser;
 using AlgebraicExpressionInterpreter;
+using System.Globalization;
 namespace GUI
 {
     public partial class Form1 : Form
@@ -35,20 +36,59 @@ namespace GUI
 
         }
 
-        private void EvaluateButtonClick(object sender, EventArgs e)
-        {
-            //var x = Double.Parse(textBoxValueForX.Text);
-            //var result=expression.Interpret(new Context(x));
-            //textBoxResult.Text = result.ToString();
-
-        }
-
         private void button1Evaluate_Click(object sender, EventArgs e)
         {
-            functionGridView.XLeft = -3;
-            functionGridView.XRight = 3;
+            if (expression == null || textBoxExpression.TextLength == 0)
+            {
+                MessageBox.Show("Invalid expression");
+                return;
+            }
+            if (double.TryParse(textBoxValueForX0.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double x0) == false)
+            {
+                MessageBox.Show("Invalid x0");
+                return;
+            }
+            if (double.TryParse(textBoxValueForXn.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double xn) == false)
+            {
+                MessageBox.Show("Invalid xn");
+                return;
+            }
+            if (double.TryParse(textBoxYMin.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double yMin) == false)
+            {
+                MessageBox.Show("Invalid yMin");
+                return;
+            }
+            if (double.TryParse(textBoxYMax.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double yMax) == false)
+            {
+                MessageBox.Show("Invalid yMax");
+                return;
+            }
+            //TODO:Check if x0 and xn valid
+            if (int.TryParse(textBoxIntervalsNumber.Text, out int n) == false)
+            {
+                MessageBox.Show("Invalid n");
+                return;
+            }
+            if (n <= 0)
+            {
+                MessageBox.Show("Invalid n");
+                return;
+            }
+
+            functionGridView.XLeft = x0;
+            functionGridView.XRight = xn;
+            functionGridView.NumberOfPoints = n;
+            functionGridView.YBottom = yMin;
+            functionGridView.YTop = yMax;
+            functionGridView.AdjustYScaleAutomatically = checkBoxAdjustAutomatically.Checked;
             functionGridView.Expression=parser.Parse(textBoxExpression.Text);
             functionGridView.Invalidate();
+        }
+
+        private void checkBoxAdjustAutomatically_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxYMin.Enabled = !checkBoxAdjustAutomatically.Checked;
+            textBoxYMax.Enabled = !checkBoxAdjustAutomatically.Checked;
         }
     }
 }

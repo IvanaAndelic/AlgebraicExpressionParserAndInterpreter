@@ -14,7 +14,7 @@ namespace Expressions
             var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(3);
-            Assert.AreEqual(25, sum.Interpret(context));
+            Assert.AreEqual(25, sum.Evaluate(context));
         }
 
         [TestMethod]
@@ -25,8 +25,8 @@ namespace Expressions
             var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(3);
-            Assert.AreEqual(5, sum.Interpret(context));
-            Assert.AreEqual(7, sum.Interpret(new Context(5)));
+            Assert.AreEqual(5, sum.Evaluate(context));
+            Assert.AreEqual(7, sum.Evaluate(new Context(5)));
         }
 
         [TestMethod]
@@ -37,7 +37,7 @@ namespace Expressions
             var sum = new AlgebraicExpressionInterpreter.SumExpression(left, right);
 
             Context context = new Context(4);
-            Assert.AreEqual(8, sum.Interpret(context));
+            Assert.AreEqual(8, sum.Evaluate(context));
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace Expressions
             var multi = new AlgebraicExpressionInterpreter.MultiplyExpression(first, sum);
 
             Context context = new Context(4);
-            Assert.AreEqual(28, multi.Interpret(context));
+            Assert.AreEqual(28, multi.Evaluate(context));
         }
     }
 }

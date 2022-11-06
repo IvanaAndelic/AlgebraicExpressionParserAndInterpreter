@@ -14,7 +14,7 @@ namespace Expressions
             var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(5);
-            Assert.AreEqual(12, difference.Interpret(context), 1e-10);
+            Assert.AreEqual(12, difference.Evaluate(context), 1e-10);
         }
 
         [TestMethod]
@@ -25,7 +25,7 @@ namespace Expressions
             var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(3);
-            Assert.AreEqual(-2, difference.Interpret(context), 1e-10);
+            Assert.AreEqual(-2, difference.Evaluate(context), 1e-10);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace Expressions
             var difference= new AlgebraicExpressionInterpreter.SubtractExpression(left, right);
 
             Context context = new Context(4);
-            Assert.AreEqual(0, difference.Interpret(context), 1e-10);
+            Assert.AreEqual(0, difference.Evaluate(context), 1e-10);
         }
     }
 }

@@ -15,9 +15,9 @@ namespace Expressions
             var power = new AlgebraicExpressionInterpreter.PowerExpression(@base, exponent);
 
             Context context = new Context(5);
-            Assert.AreEqual(8, power.Interpret(context), 1e-10);
+            Assert.AreEqual(8, power.Evaluate(context), 1e-10);
 
-            Assert.AreEqual(-8, new AlgebraicExpressionInterpreter.PowerExpression(new Constant(-2), exponent).Interpret(context), 1e-10);
+            Assert.AreEqual(-8, new AlgebraicExpressionInterpreter.PowerExpression(new Constant(-2), exponent).Evaluate(context), 1e-10);
         }
 
         [TestMethod]
@@ -28,7 +28,7 @@ namespace Expressions
             var power = new AlgebraicExpressionInterpreter.PowerExpression(@base, exponent);
 
             Context context = new Context(3);
-            Assert.AreEqual(27, power.Interpret(context), 1e-10);
+            Assert.AreEqual(27, power.Evaluate(context), 1e-10);
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace Expressions
             var power = new AlgebraicExpressionInterpreter.PowerExpression(@base, exponent);
 
             Context context = new Context(-3);
-            Assert.AreEqual(0.125, power.Interpret(context), 1e-10);
+            Assert.AreEqual(0.125, power.Evaluate(context), 1e-10);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace Expressions
             var power = new AlgebraicExpressionInterpreter.PowerExpression(var, var);
 
             Context context = new Context(-2);
-            Assert.AreEqual(0.25, power.Interpret(context), 1e-10);
+            Assert.AreEqual(0.25, power.Evaluate(context), 1e-10);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace AlgebraicExpressionInterpreter
             this.value = value;
         }
 
-        protected override double DoInterpret(Context context)
+        protected override double DoEvaluate(Context context)
         {
             return value;
         }

@@ -81,7 +81,7 @@ namespace GUI2
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(442, 116);
+            this.label4.Location = new System.Drawing.Point(442, 76);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(23, 13);
             this.label4.TabIndex = 5;
@@ -89,7 +89,7 @@ namespace GUI2
             // 
             // textBoxValueForXn
             // 
-            this.textBoxValueForXn.Location = new System.Drawing.Point(532, 116);
+            this.textBoxValueForXn.Location = new System.Drawing.Point(495, 73);
             this.textBoxValueForXn.Name = "textBoxValueForXn";
             this.textBoxValueForXn.Size = new System.Drawing.Size(100, 20);
             this.textBoxValueForXn.TabIndex = 6;
@@ -115,7 +115,7 @@ namespace GUI2
             // 
             // textBoxIntervalsNumber
             // 
-            this.textBoxIntervalsNumber.Location = new System.Drawing.Point(574, 152);
+            this.textBoxIntervalsNumber.Location = new System.Drawing.Point(554, 120);
             this.textBoxIntervalsNumber.Name = "textBoxIntervalsNumber";
             this.textBoxIntervalsNumber.Size = new System.Drawing.Size(58, 20);
             this.textBoxIntervalsNumber.TabIndex = 8;
@@ -123,7 +123,7 @@ namespace GUI2
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(442, 152);
+            this.label7.Location = new System.Drawing.Point(430, 123);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(101, 13);
             this.label7.TabIndex = 7;

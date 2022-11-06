@@ -19,9 +19,9 @@ namespace AlgebraicExpressionInterpreter
             this.expression = expression;
         }
 
-        protected override double DoInterpret(Context context)
+        protected override double DoEvaluate(Context context)
         {
-            return function(expression.Interpret(context));
+            return function(expression.Evaluate(context));
         }
     }
 }
