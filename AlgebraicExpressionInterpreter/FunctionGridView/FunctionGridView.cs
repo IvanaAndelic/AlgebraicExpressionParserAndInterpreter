@@ -66,7 +66,7 @@ namespace CustomControls
         {
             using (Pen pen = new Pen(Color.Gray))
             {
-                //MarkAxes(graphics, pen);
+                MarkAxes(g, pen);
                 g.DrawLine(pen, 0, ClientRectangle.Height / 2,
                     ClientRectangle.Width, ClientRectangle.Height / 2);
                 g.DrawLine(pen, ClientRectangle.Width / 2, 0,
