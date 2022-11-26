@@ -32,7 +32,6 @@ namespace GUI
             this.textBoxIntervalsNumber = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.button1Evaluate = new System.Windows.Forms.Button();
-            this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.textBoxValueForXn = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBoxValueForX0 = new System.Windows.Forms.TextBox();
@@ -45,6 +44,7 @@ namespace GUI
             this.label5 = new System.Windows.Forms.Label();
             this.functionGridView = new CustomControls.FunctionGridView();
             this.checkBoxAdjustAutomatically = new System.Windows.Forms.CheckBox();
+            this.textBoxErrors = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBoxIntervalsNumber
@@ -66,6 +66,7 @@ namespace GUI
             // 
             // button1Evaluate
             // 
+            this.button1Evaluate.Enabled = false;
             this.button1Evaluate.Location = new System.Drawing.Point(353, 4);
             this.button1Evaluate.Name = "button1Evaluate";
             this.button1Evaluate.Size = new System.Drawing.Size(75, 23);
@@ -73,16 +74,6 @@ namespace GUI
             this.button1Evaluate.Text = "E&valuate";
             this.button1Evaluate.UseVisualStyleBackColor = true;
             this.button1Evaluate.Click += new System.EventHandler(this.button1Evaluate_Click);
-            // 
-            // textBoxErrors
-            // 
-            this.textBoxErrors.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxErrors.Location = new System.Drawing.Point(12, 418);
-            this.textBoxErrors.Name = "textBoxErrors";
-            this.textBoxErrors.ReadOnly = true;
-            this.textBoxErrors.Size = new System.Drawing.Size(396, 20);
-            this.textBoxErrors.TabIndex = 24;
-            this.textBoxErrors.TabStop = false;
             // 
             // textBoxValueForXn
             // 
@@ -176,9 +167,9 @@ namespace GUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.functionGridView.BackColor = System.Drawing.SystemColors.Window;
             this.functionGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.functionGridView.Location = new System.Drawing.Point(15, 87);
+            this.functionGridView.Location = new System.Drawing.Point(-1, 87);
             this.functionGridView.Name = "functionGridView";
-            this.functionGridView.Size = new System.Drawing.Size(773, 325);
+            this.functionGridView.Size = new System.Drawing.Size(801, 361);
             this.functionGridView.TabIndex = 25;
             // 
             // checkBoxAdjustAutomatically
@@ -192,11 +183,23 @@ namespace GUI
             this.checkBoxAdjustAutomatically.UseVisualStyleBackColor = true;
             this.checkBoxAdjustAutomatically.CheckedChanged += new System.EventHandler(this.checkBoxAdjustAutomatically_CheckedChanged);
             // 
+            // textBoxErrors
+            // 
+            this.textBoxErrors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxErrors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.textBoxErrors.Location = new System.Drawing.Point(444, 9);
+            this.textBoxErrors.Name = "textBoxErrors";
+            this.textBoxErrors.Size = new System.Drawing.Size(344, 23);
+            this.textBoxErrors.TabIndex = 31;
+            this.textBoxErrors.Text = "AAA";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.textBoxErrors);
             this.Controls.Add(this.checkBoxAdjustAutomatically);
             this.Controls.Add(this.textBoxYMax);
             this.Controls.Add(this.label1);
@@ -206,7 +209,6 @@ namespace GUI
             this.Controls.Add(this.textBoxIntervalsNumber);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.button1Evaluate);
-            this.Controls.Add(this.textBoxErrors);
             this.Controls.Add(this.textBoxValueForXn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBoxValueForX0);
@@ -225,7 +227,6 @@ namespace GUI
         private System.Windows.Forms.TextBox textBoxIntervalsNumber;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button button1Evaluate;
-        private System.Windows.Forms.TextBox textBoxErrors;
         private System.Windows.Forms.TextBox textBoxValueForXn;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBoxValueForX0;
@@ -238,6 +239,7 @@ namespace GUI
         private System.Windows.Forms.TextBox textBoxYMin;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBoxAdjustAutomatically;
+        private System.Windows.Forms.Label textBoxErrors;
     }
 }
 

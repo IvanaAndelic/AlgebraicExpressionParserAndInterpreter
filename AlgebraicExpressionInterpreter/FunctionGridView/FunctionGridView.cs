@@ -24,7 +24,7 @@ namespace CustomControls
         public double YTop = 1;
         public bool AdjustYScaleAutomatically = false;
         public int NumberOfPoints = 10;
-        public IExpression Expression=null;
+        public IExpression Expression = null;
 
 
         public FunctionGridView()
@@ -46,12 +46,12 @@ namespace CustomControls
             var values = EvaluateExpression();
             if (AdjustYScaleAutomatically)
             {
-                YBottom=values.Min();
-                YTop=values.Max();
+                YBottom = values.Min();
+                YTop = values.Max();
             }
             DrawGrid(pe.Graphics);
             DrawExpression(pe.Graphics, values);
-          
+
         }
         public int ScreenY(double y)
         {
@@ -137,7 +137,7 @@ namespace CustomControls
                 double x = (XRight - XLeft) / NumberOfPoints * i;
                 double y = values[i];
                 float xClient = (float)((x) * xFactor);
-                float yClient = (float)((YBottom - y) * yFactor)+ ClientRectangle.Height;
+                float yClient = (float)((YBottom - y) * yFactor) + ClientRectangle.Height;
                 PointF point = new PointF(xClient, yClient);
                 points[i] = point;
             }
@@ -150,7 +150,7 @@ namespace CustomControls
             double[] values = new double[NumberOfPoints + 1];
             for (int i = 0; i <= NumberOfPoints; ++i)
             {
-                double x = (XRight - XLeft) / NumberOfPoints * i;
+                double x = (XRight - XLeft) / NumberOfPoints * i + XLeft;
                 double y = Expression.Evaluate(new Context(x));
                 values[i] = y;
             }

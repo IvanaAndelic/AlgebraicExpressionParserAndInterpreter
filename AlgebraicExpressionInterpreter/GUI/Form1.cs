@@ -19,19 +19,28 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
+            textBoxErrors.Text = string.Empty;
         }
 
         private void EquationTextChanged(object sender, EventArgs e)
         {
             try
             {
-                expression = parser.Parse(textBoxExpression.Text);
-                textBoxErrors.Clear();
-
+                if (textBoxExpression.TextLength != 0)
+                {
+                    expression = parser.Parse(textBoxExpression.Text);
+                    button1Evaluate.Enabled = true;
+                }
+                else
+                {
+                    button1Evaluate.Enabled = false;
+                }
+                textBoxErrors.Text = String.Empty;
             }
             catch (ParserException pe)
             {
                 textBoxErrors.Text = pe.Message;
+                button1Evaluate.Enabled = false;
             }
 
         }
@@ -81,7 +90,7 @@ namespace GUI
             functionGridView.YBottom = yMin;
             functionGridView.YTop = yMax;
             functionGridView.AdjustYScaleAutomatically = checkBoxAdjustAutomatically.Checked;
-            functionGridView.Expression=parser.Parse(textBoxExpression.Text);
+            functionGridView.Expression = parser.Parse(textBoxExpression.Text);
             functionGridView.Invalidate();
         }
 
