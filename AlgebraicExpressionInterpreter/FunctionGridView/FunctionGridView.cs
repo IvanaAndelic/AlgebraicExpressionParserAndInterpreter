@@ -36,6 +36,15 @@ namespace CustomControls
             SetStyle(ControlStyles.AllPaintingInWmPaint, true);
         }
 
+        public void SetBounds(double x0, double xn, double y0, double yn)
+        {
+            XLeft = x0;
+            XRight = xn;
+            YBottom = y0;
+            YTop = yn;
+            m_displayBounds = new RectangleF((float)x0, (float)y0, (float)(xn -x0), (float)(yn -y0));
+        }
+
         private RectangleF m_displayBounds = new RectangleF(-5, -5, 10, 10);
 
         protected override void OnPaint(PaintEventArgs pe)
@@ -59,7 +68,7 @@ namespace CustomControls
         }
         public int ScreenX(double x)
         {
-            return (int)((x / (m_displayBounds.Width / 2) + 1) * ClientRectangle.Width / 2);
+            return (int)(((x-XLeft) / m_displayBounds.Width) * ClientRectangle.Width);
         }
 
         private void DrawGrid(Graphics g)
@@ -67,10 +76,10 @@ namespace CustomControls
             using (Pen pen = new Pen(Color.Gray))
             {
                 MarkAxes(g, pen);
-                g.DrawLine(pen, 0, ClientRectangle.Height / 2,
-                    ClientRectangle.Width, ClientRectangle.Height / 2);
-                g.DrawLine(pen, ClientRectangle.Width / 2, 0,
-                    ClientRectangle.Width / 2, ClientRectangle.Height);
+                //g.DrawLine(pen, 0, ClientRectangle.Height / 2,
+                //    ClientRectangle.Width, ClientRectangle.Height / 2);
+                //g.DrawLine(pen, ClientRectangle.Width / 2, 0,
+                //    ClientRectangle.Width / 2, ClientRectangle.Height);
             }
         }
         private void MarkAxes(Graphics graphics, Pen pen)
@@ -87,9 +96,9 @@ namespace CustomControls
         {
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
-            int y0 = ScreenY(0) - 3;
-            int y1 = ScreenY(0) + 3;
-            double x = -m_displayBounds.Width;
+            int y0 = ScreenY(YTop);
+            int y1 = ScreenY(YBottom);
+            double x = XLeft;
             double increment = m_displayBounds.Width / 5;
             while (x <= m_displayBounds.Width)
             {
@@ -144,6 +153,7 @@ namespace CustomControls
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             g.DrawCurve(Pens.Black, points);
         }
+
 
         private double[] EvaluateExpression()
         {

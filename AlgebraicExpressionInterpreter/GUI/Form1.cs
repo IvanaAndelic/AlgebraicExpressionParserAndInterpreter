@@ -83,12 +83,12 @@ namespace GUI
                 MessageBox.Show("Invalid n");
                 return;
             }
-
-            functionGridView.XLeft = x0;
-            functionGridView.XRight = xn;
+            functionGridView.SetBounds(x0, xn, yMin,yMax);
+            //functionGridView.XLeft = x0;
+            //functionGridView.XRight = xn;
             functionGridView.NumberOfPoints = n;
-            functionGridView.YBottom = yMin;
-            functionGridView.YTop = yMax;
+            //functionGridView.YBottom = yMin;
+            //functionGridView.YTop = yMax;
             functionGridView.AdjustYScaleAutomatically = checkBoxAdjustAutomatically.Checked;
             functionGridView.Expression = parser.Parse(textBoxExpression.Text);
             functionGridView.Invalidate();
