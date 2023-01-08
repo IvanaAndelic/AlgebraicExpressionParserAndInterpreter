@@ -11,6 +11,7 @@ using AlgebraicExpressionInterpreter;
 using AlgebraicExpressionParser;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace CustomControls
 
@@ -42,7 +43,7 @@ namespace CustomControls
             XRight = xn;
             YBottom = y0;
             YTop = yn;
-            m_displayBounds = new RectangleF((float)x0, (float)y0, (float)(xn -x0), (float)(yn -y0));
+            m_displayBounds = new RectangleF((float)x0, (float)y0, (float)(xn - x0), (float)(yn - y0));
         }
 
         private RectangleF m_displayBounds = new RectangleF(-5, -5, 10, 10);
@@ -64,11 +65,11 @@ namespace CustomControls
         }
         public int ScreenY(double y)
         {
-            return (int)((1 - y / (m_displayBounds.Height / 2)) * ClientRectangle.Height / 2);
+            return (int)(((1 - y) / m_displayBounds.Height) * ClientRectangle.Height);
         }
         public int ScreenX(double x)
         {
-            return (int)(((x-XLeft) / m_displayBounds.Width) * ClientRectangle.Width);
+            return (int)(((x - XLeft) / m_displayBounds.Width) * ClientRectangle.Width);
         }
 
         private void DrawGrid(Graphics g)
@@ -76,10 +77,6 @@ namespace CustomControls
             using (Pen pen = new Pen(Color.Gray))
             {
                 MarkAxes(g, pen);
-                //g.DrawLine(pen, 0, ClientRectangle.Height / 2,
-                //    ClientRectangle.Width, ClientRectangle.Height / 2);
-                //g.DrawLine(pen, ClientRectangle.Width / 2, 0,
-                //    ClientRectangle.Width / 2, ClientRectangle.Height);
             }
         }
         private void MarkAxes(Graphics graphics, Pen pen)
@@ -103,35 +100,48 @@ namespace CustomControls
             while (x <= m_displayBounds.Width)
             {
                 int xScr = ScreenX(x);
-                graphics.DrawLine(penGrid, xScr, 0, xScr, this.Height);
-                graphics.DrawLine(pen, xScr, y0, xScr, y1);
+                // graphics.DrawLine(penGrid, xScr, 0, xScr, this.Height);
+                graphics.DrawLine(penGrid, xScr, y0, xScr, y1);
                 float y = ScreenY(0);
                 SizeF labelSize = graphics.MeasureString(x.ToString(), drawFont);
-                //if (DaLiJeCijeliUnutarPanela(new Point((int)(xScr - labelSize.Width / 2), (int)(y + 3)), labelSize)) {
-                graphics.DrawString(x.ToString(), drawFont, drawBrush, xScr - labelSize.Width / 2, y + 3);
-                //}
+                if (IsInsideView(new Point((int)(xScr - labelSize.Width / 2), (int)(y + 3)), labelSize))
+                {
+                    graphics.DrawString(x.ToString("F", CultureInfo.InvariantCulture), drawFont, drawBrush, xScr - labelSize.Width / 2, y + 3);
+                }
                 x += increment;
             }
+        }
+
+        private bool IsInsideView(PointF topLeft, SizeF labelSize)
+        {
+            var viewRect = new RectangleF(0, 0, ClientRectangle.Width, ClientRectangle.Height);
+            var labelRect = new RectangleF(topLeft, labelSize);
+            return viewRect.Contains(labelRect);
         }
 
         private void MarkYAxes(Graphics graphics, Pen pen, Pen penGrid)
         {
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
-            int x0 = ScreenX(0) - 3;
-            int x1 = ScreenX(0) + 3;
-            double y = -m_displayBounds.Height;
+            int x0 = ScreenX(XLeft);
+            int x1 = ScreenX(XRight);
+            double y = YBottom;
             double increment = m_displayBounds.Height / 5;
             while (y <= m_displayBounds.Height)
             {
                 int yScr = ScreenY(y);
-                graphics.DrawLine(penGrid, 0, yScr, this.Width, yScr);
-                graphics.DrawLine(pen, x0, yScr, x1, yScr);
+                // graphics.DrawLine(penGrid, 0, yScr, this.Width, yScr);
+                graphics.DrawLine(penGrid, x0, yScr, x1, yScr);
                 SizeF labelSize = graphics.MeasureString(y.ToString(), drawFont);
                 //if (DaLiJeCijeliUnutarPanela(new Point(X1, (int)(Yscr - velicina.Height / 2)), velicina)) {
-                graphics.DrawString(y.ToString(), drawFont, drawBrush, x1, yScr - labelSize.Height / 2);
+                graphics.DrawString(y.ToString("F", CultureInfo.InvariantCulture), drawFont, drawBrush, x1, yScr - labelSize.Height / 2);
                 //}
                 y += increment;
+            }
+            if (YBottom < 0 && YTop > 0)
+            {
+                int yScr = ScreenY(0);
+                graphics.DrawLine(pen, 0, yScr, this.Width, yScr);
             }
         }
         private void DrawExpression(Graphics g, double[] values)
