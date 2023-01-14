@@ -41,18 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constant.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="DivideExpression.cs" />
-    <Compile Include="Expression.cs" />
-    <Compile Include="IExpression.cs" />
-    <Compile Include="MathFunction.cs" />
-    <Compile Include="MultiplyExpression.cs" />
-    <Compile Include="PowerExpression.cs" />
+    <Compile Include="Interpreter\Constant.cs" />
+    <Compile Include="Interpreter\Context.cs" />
+    <Compile Include="Interpreter\DivideExpression.cs" />
+    <Compile Include="Interpreter\Expression.cs" />
+    <Compile Include="Interpreter\IExpression.cs" />
+    <Compile Include="Interpreter\MathFunction.cs" />
+    <Compile Include="Interpreter\MultiplyExpression.cs" />
+    <Compile Include="Interpreter\PowerExpression.cs" />
+    <Compile Include="Parser\Parser.cs" />
+    <Compile Include="Parser\ParserException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SubtractExpression.cs" />
-    <Compile Include="SumExpression.cs" />
-    <Compile Include="VariableX.cs" />
+    <Compile Include="Interpreter\SubtractExpression.cs" />
+    <Compile Include="Interpreter\SumExpression.cs" />
+    <Compile Include="Interpreter\VariableX.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

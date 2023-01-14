@@ -69,13 +69,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AlgebraicExpressionInterpreter\AlgebraicExpressionInterpreter.csproj">
+    <ProjectReference Include="..\AlgebraicExpressionInterpreter\AlgebraicExpressionParserAndInterpreter.csproj">
       <Project>{a0a52273-7401-400e-914a-4ebe378054c7}</Project>
-      <Name>AlgebraicExpressionInterpreter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AlgebraicExpressionParser\AlgebraicExpressionParser.csproj">
-      <Project>{3ce5a057-a321-4500-89fb-761d58631e69}</Project>
-      <Name>AlgebraicExpressionParser</Name>
+      <Name>AlgebraicExpressionParserAndInterpreter</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
