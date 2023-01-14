@@ -60,9 +60,10 @@ namespace AlgebraicExpressionParser
             Abs,
         }
 
-        private enum namedConstant {
-           E, 
-           PI
+        private enum namedConstant
+        {
+            E,
+            PI
         }
 
         /// <summary>
@@ -447,7 +448,7 @@ namespace AlgebraicExpressionParser
         {
             string functionName = GetIdentifier(text, pos);
 
-            if(functionTokenMap.TryGetValue(functionName,out Operator function))
+            if (functionTokenMap.TryGetValue(functionName, out Operator function))
             {
                 pos += functionName.Length;
                 return function;
@@ -482,25 +483,16 @@ namespace AlgebraicExpressionParser
             output.Push(new Constant(value));
         }
 
-        private Constant PushNamedConstant(string text, ref int pos)
+        private void PushNamedConstant(string text, ref int pos)
         {
             string constantName = GetIdentifier(text, pos);
 
-            if(namedConstantsToken.TryGetValue(constantName, out Constant constant)){
+            if (namedConstantsToken.TryGetValue(constantName, out Constant constant))
+            {
                 pos += constantName.Length;
-                return constant;
+                output.Push(constant);
+                return;
             }
-            //switch (constantname)
-            //{
-            //    case "e":
-            //        pos += 1;
-            //        output.push(new constant(math.e));
-            //        return;
-            //    case "pi":
-            //        pos += 2;
-            //        output.push(new constant(math.pi));
-            //        return;
-            //}
             throw new ParserException("Unknown named constant", pos);
         }
 
