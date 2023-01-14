@@ -64,6 +64,7 @@
     <Compile Include="Parser\Parentheses.cs" />
     <Compile Include="Parser\OperatorPrecedence.cs" />
     <Compile Include="Parser\NamedConstant.cs" />
+    <Compile Include="EvaluateGridPositions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -72,6 +73,10 @@
     <ProjectReference Include="..\AlgebraicExpressionInterpreter\AlgebraicExpressionParserAndInterpreter.csproj">
       <Project>{a0a52273-7401-400e-914a-4ebe378054c7}</Project>
       <Name>AlgebraicExpressionParserAndInterpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FunctionGridView\FunctionGridView.csproj">
+      <Project>{67e7f728-6eb7-4937-973f-f5725f8bf7b5}</Project>
+      <Name>FunctionGridView</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

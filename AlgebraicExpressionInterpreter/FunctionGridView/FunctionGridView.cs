@@ -186,5 +186,10 @@ namespace CustomControls
             }
             return values;
         }
+        public static IEnumerable<double> EvaluateGridPositions(double rangeStart, double rangeEnd, int n)
+        {
+            throw new NotImplementedException();
+        }
     }
+
 }
