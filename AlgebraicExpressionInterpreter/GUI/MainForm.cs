@@ -12,11 +12,11 @@ using AlgebraicExpressionInterpreter;
 using System.Globalization;
 namespace GUI
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         Parser parser = new Parser();
         IExpression expression = null;
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             textBoxErrors.Text = string.Empty;

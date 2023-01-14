@@ -1,7 +1,7 @@
 ﻿
 namespace GUI
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -71,7 +71,7 @@ namespace GUI
             this.button1Evaluate.Name = "button1Evaluate";
             this.button1Evaluate.Size = new System.Drawing.Size(75, 23);
             this.button1Evaluate.TabIndex = 21;
-            this.button1Evaluate.Text = "E&valuate";
+            this.button1Evaluate.Text = "&Draw";
             this.button1Evaluate.UseVisualStyleBackColor = true;
             this.button1Evaluate.Click += new System.EventHandler(this.button1Evaluate_Click);
             // 
@@ -167,9 +167,9 @@ namespace GUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.functionGridView.BackColor = System.Drawing.SystemColors.Window;
             this.functionGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.functionGridView.Location = new System.Drawing.Point(0, 87);
+            this.functionGridView.Location = new System.Drawing.Point(12, 87);
             this.functionGridView.Name = "functionGridView";
-            this.functionGridView.Size = new System.Drawing.Size(801, 361);
+            this.functionGridView.Size = new System.Drawing.Size(796, 351);
             this.functionGridView.TabIndex = 25;
             // 
             // checkBoxAdjustAutomatically
@@ -190,15 +190,16 @@ namespace GUI
             this.textBoxErrors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.textBoxErrors.Location = new System.Drawing.Point(444, 9);
             this.textBoxErrors.Name = "textBoxErrors";
-            this.textBoxErrors.Size = new System.Drawing.Size(344, 23);
+            this.textBoxErrors.Size = new System.Drawing.Size(364, 23);
             this.textBoxErrors.TabIndex = 31;
             this.textBoxErrors.Text = "AAA";
             // 
-            // Form1
+            // MainForm
             // 
+            this.AcceptButton = this.button1Evaluate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(820, 450);
             this.Controls.Add(this.textBoxErrors);
             this.Controls.Add(this.checkBoxAdjustAutomatically);
             this.Controls.Add(this.textBoxYMax);
@@ -215,8 +216,8 @@ namespace GUI
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxExpression);
             this.Controls.Add(this.label2);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "MainForm";
+            this.Text = "Expression Drawing";
             this.ResumeLayout(false);
             this.PerformLayout();
 
