@@ -72,7 +72,6 @@ namespace GUI
                 MessageBox.Show("Invalid yMax");
                 return;
             }
-            //TODO:Check if x0 and xn valid
             if (int.TryParse(textBoxIntervalsNumber.Text, out int n) == false)
             {
                 MessageBox.Show("Invalid n");
@@ -84,11 +83,7 @@ namespace GUI
                 return;
             }
             functionGridView.SetBounds(x0, xn, yMin,yMax);
-            //functionGridView.XLeft = x0;
-            //functionGridView.XRight = xn;
             functionGridView.NumberOfPoints = n;
-            //functionGridView.YBottom = yMin;
-            //functionGridView.YTop = yMax;
             functionGridView.AdjustYScaleAutomatically = checkBoxAdjustAutomatically.Checked;
             functionGridView.Expression = parser.Parse(textBoxExpression.Text);
             functionGridView.Invalidate();

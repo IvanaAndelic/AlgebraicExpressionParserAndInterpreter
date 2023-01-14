@@ -167,7 +167,7 @@ namespace GUI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.functionGridView.BackColor = System.Drawing.SystemColors.Window;
             this.functionGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.functionGridView.Location = new System.Drawing.Point(-1, 87);
+            this.functionGridView.Location = new System.Drawing.Point(0, 87);
             this.functionGridView.Name = "functionGridView";
             this.functionGridView.Size = new System.Drawing.Size(801, 361);
             this.functionGridView.TabIndex = 25;

@@ -19,13 +19,13 @@ namespace CustomControls
     public delegate double Function(double x);
     public class FunctionGridView : System.Windows.Forms.Panel
     {
-        public double XLeft = -1;
-        public double XRight = 1;
-        public double YBottom = -1;
-        public double YTop = 1;
-        public bool AdjustYScaleAutomatically = false;
-        public int NumberOfPoints = 10;
-        public IExpression Expression = null;
+        private double XLeft = -1;
+        private double XRight = 1;
+        private double YBottom = -1;
+        private double YTop = 1;
+        private bool AdjustYScaleAutomatically = false;
+        private int NumberOfPoints = 10;
+        private IExpression Expression = null;
 
 
         public FunctionGridView()
