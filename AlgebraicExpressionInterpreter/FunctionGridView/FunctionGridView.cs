@@ -216,17 +216,6 @@ namespace CustomControls
                 gridDelta = (int)delta / factor;
                 x0Grid = (int)rangeStart * factor / (factor + gridDelta);
             }
-            else if (delta >= 10)
-            {
-                while (delta > 10)
-                {
-                    delta /= 10;
-                    counter++;
-                }
-                factor = delta / (counter * 10);
-                gridDelta = (int)delta / factor;
-                x0Grid = (int)rangeStart / factor * (factor + gridDelta);
-            }
             else if(delta<10 && delta >= 1) {
                 gridDelta = (int)delta;
                 x0Grid = (int)rangeStart + gridDelta;
