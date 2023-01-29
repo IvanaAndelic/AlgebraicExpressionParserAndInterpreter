@@ -188,6 +188,49 @@ namespace CustomControls
         }
         public static IEnumerable<double> EvaluateGridPositions(double rangeStart, double rangeEnd, int n)
         {
+            double delta = (rangeEnd - rangeStart) / n;
+            double gridDelta;
+            double factor;
+            int counter = 0;
+            double x0Grid;
+            if (delta < 1)
+            {
+                while (delta < 1)
+                {
+                    delta *= 10;
+                    counter++;
+                }
+
+                factor = delta / (counter * 10);
+                gridDelta = (int)delta / factor;
+            }
+            else if (delta >= 10)
+            {
+                while (delta >= 10)
+                {
+                    delta /= 10;
+                    counter++;
+                }
+
+                factor = delta / (counter * 10);
+                gridDelta = (int)delta / factor;
+                x0Grid = (int)rangeStart * factor / (factor + gridDelta);
+            }
+            else if (delta >= 10)
+            {
+                while (delta > 10)
+                {
+                    delta /= 10;
+                    counter++;
+                }
+                factor = delta / (counter * 10);
+                gridDelta = (int)delta / factor;
+                x0Grid = (int)rangeStart / factor * (factor + gridDelta);
+            }
+            else if(delta<10 && delta >= 1) {
+                gridDelta = (int)delta;
+                x0Grid = (int)rangeStart + gridDelta;
+            }
             throw new NotImplementedException();
         }
     }
