@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EvaluateGridPositions.cs" />
     <Compile Include="FunctionGridView.cs">
       <SubType>Component</SubType>
     </Compile>

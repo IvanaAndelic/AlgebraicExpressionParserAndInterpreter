@@ -64,7 +64,7 @@
     <Compile Include="Parser\Parentheses.cs" />
     <Compile Include="Parser\OperatorPrecedence.cs" />
     <Compile Include="Parser\NamedConstant.cs" />
-    <Compile Include="EvaluateGridPositions.cs" />
+    <Compile Include="EvaluateGridPositions\EvaluateGrids.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
