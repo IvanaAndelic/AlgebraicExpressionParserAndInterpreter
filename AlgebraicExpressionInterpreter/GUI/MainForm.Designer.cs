@@ -29,6 +29,7 @@ namespace GUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.textBoxIntervalsNumber = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.button1Evaluate = new System.Windows.Forms.Button();
@@ -42,9 +43,12 @@ namespace GUI
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxYMin = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.functionGridView = new CustomControls.FunctionGridView();
             this.checkBoxAdjustAutomatically = new System.Windows.Forms.CheckBox();
             this.textBoxErrors = new System.Windows.Forms.Label();
+            this.functionGridView = new CustomControls.FunctionGridView();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // textBoxIntervalsNumber
@@ -160,18 +164,6 @@ namespace GUI
             this.label5.TabIndex = 26;
             this.label5.Text = "y&Min:";
             // 
-            // functionGridView
-            // 
-            this.functionGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.functionGridView.BackColor = System.Drawing.SystemColors.Window;
-            this.functionGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.functionGridView.Location = new System.Drawing.Point(12, 87);
-            this.functionGridView.Name = "functionGridView";
-            this.functionGridView.Size = new System.Drawing.Size(796, 351);
-            this.functionGridView.TabIndex = 25;
-            // 
             // checkBoxAdjustAutomatically
             // 
             this.checkBoxAdjustAutomatically.AutoSize = true;
@@ -193,6 +185,22 @@ namespace GUI
             this.textBoxErrors.Size = new System.Drawing.Size(364, 23);
             this.textBoxErrors.TabIndex = 31;
             this.textBoxErrors.Text = "AAA";
+            // 
+            // functionGridView
+            // 
+            this.functionGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.functionGridView.BackColor = System.Drawing.SystemColors.Window;
+            this.functionGridView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.functionGridView.Location = new System.Drawing.Point(12, 87);
+            this.functionGridView.Name = "functionGridView";
+            this.functionGridView.Size = new System.Drawing.Size(796, 351);
+            this.functionGridView.TabIndex = 25;
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
             // 
             // MainForm
             // 
@@ -218,6 +226,7 @@ namespace GUI
             this.Controls.Add(this.label2);
             this.Name = "MainForm";
             this.Text = "Expression Drawing";
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -241,6 +250,8 @@ namespace GUI
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBoxAdjustAutomatically;
         private System.Windows.Forms.Label textBoxErrors;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Drawing.Printing.PrintDocument printDocument1;
     }
 }
 

@@ -8,15 +8,15 @@ namespace FunctionGridView
 {
     public class EvaluateGridPositions
     {
-        public static IEnumerable<double> EvaluateVerticalGridPositions(double rangeStart, double rangeEnd, int n)
+        public static IEnumerable<double> EvaluateVerticalAndHorizontalGridPositions(double rangeStart, double rangeEnd, int n)
         {
-            if(n==0 || n==rangeEnd || n < rangeEnd)
+            if(n==0 || rangeStart>=rangeEnd)
             {
                 throw new InvalidOperationException("n is not valid.");
             }
 
             double delta = (rangeEnd - rangeStart) / n;
-            int factor = 1;
+            double factor = 1;
 
             if (delta < 1)
             {
@@ -31,21 +31,30 @@ namespace FunctionGridView
                 while (delta >= 10)
                 {
                     delta /= 10;
-                    factor *= 10;
+                    factor /= 10;
                 }
             }
-            double deltaGrid = (int)(delta / factor) * factor;
+           double deltaGrid = (int)(delta / factor) * factor;
            double startGrid = (int)(rangeStart / factor) * factor;
 
             List<double> gridPoints = new List<double>();
             double gridPoint = startGrid;
             for (int i = 0; i < n; ++i)
             {
-                gridPoint += deltaGrid;
-                gridPoints.Add(gridPoint);
+                if (i == 0)
+                {
+                    gridPoints.Add(gridPoint);
+                }
+                else
+                {
+                    gridPoint += deltaGrid;
+                    gridPoints.Add(gridPoint);
+                }
             }
 
             return gridPoints;
         }
+       
     }
+    
 }
