@@ -10,7 +10,7 @@ namespace FunctionGridView
     {
         public static IEnumerable<double> EvaluateVerticalAndHorizontalGridPositions(double rangeStart, double rangeEnd, int n)
         {
-            if(n==0 || rangeStart>=rangeEnd)
+            if (n == 0 || rangeStart >= rangeEnd)
             {
                 throw new EvaluateGridPositionsException("n is not valid.");
             }
@@ -34,9 +34,12 @@ namespace FunctionGridView
                     factor /= 10;
                 }
             }
-           double deltaGrid = (int)(delta *factor) / factor;
-            if (deltaGrid == 0) throw new EvaluateGridPositionsException("deltaGrid is 0.");
-           double startGrid = (int)(rangeStart / factor) * factor;
+            double deltaGrid = (int)(delta * factor) / factor;
+            if (deltaGrid == 0)
+            {
+                throw new EvaluateGridPositionsException("deltaGrid is 0.");
+            }
+            double startGrid = (int)(rangeStart / factor) * factor;
 
             List<double> gridPoints = new List<double>();
             double gridPoint = startGrid;
@@ -55,7 +58,7 @@ namespace FunctionGridView
 
             return gridPoints;
         }
-       
+
     }
-    
+
 }

@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using AlgebraicExpressionInterpreter;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AlgebraicExpressionInterpreter;
-using AlgebraicExpressionParser;
 using System.Drawing.Drawing2D;
-using System.Windows.Forms;
 using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CustomControls
 
 {
     public delegate double Function(double x);
-    public class FunctionGridView : System.Windows.Forms.Panel
+    public class FunctionGridView : System.Windows.Forms.PictureBox
     {
         private double XLeft = -1;
         private double XRight = 1;
@@ -177,6 +169,7 @@ namespace CustomControls
 
         private double[] EvaluateExpression()
         {
+            NumberOfPoints = ClientRectangle.Width / 2;
             double[] values = new double[NumberOfPoints + 1];
             for (int i = 0; i <= NumberOfPoints; ++i)
             {

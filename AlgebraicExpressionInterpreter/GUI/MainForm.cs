@@ -42,6 +42,11 @@ namespace GUI
                 textBoxErrors.Text = pe.Message;
                 button1Evaluate.Enabled = false;
             }
+            catch (FunctionGridView.EvaluateGridPositionsException pe)
+            {
+                textBoxErrors.Text = pe.Message;
+                button1Evaluate.Enabled = false;
+            }
 
         }
 
@@ -62,6 +67,7 @@ namespace GUI
                 MessageBox.Show("Invalid xn");
                 return;
             }
+            //provjeriti x0>=xn; dodati messageBox
             if (double.TryParse(textBoxYMin.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double yMin) == false)
             {
                 MessageBox.Show("Invalid yMin");
