@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EvaluateGridPositions.cs" />
+    <Compile Include="EvaluateGridPositionsException.cs" />
     <Compile Include="FunctionGridView.cs">
       <SubType>Component</SubType>
     </Compile>

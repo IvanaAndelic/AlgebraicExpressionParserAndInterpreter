@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FunctionGridView;
 
 namespace FunctionGridViewTest
 {
@@ -14,7 +15,7 @@ namespace FunctionGridViewTest
             var gridPositions = FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(-0.05,0.05,5);
             List<double> listOfPoints = new List<double>() {0, 2, 4, 6, 8 };
             Assert.AreEqual(5, gridPositions.Count());
-            Assert.IsTrue(gridPositions.Equals(listOfPoints));
+            Assert.IsTrue(gridPositions.SequenceEqual(listOfPoints));
         }
         [TestMethod]
         public void EvaluateGridPositionsReturnsDeltaGridOf4()
@@ -25,12 +26,9 @@ namespace FunctionGridViewTest
             Assert.IsTrue(gridPositions.SequenceEqual(listOfPoints));
         }
         [TestMethod]
-        public void EvaluateGridPositionsReturnsDeltaGridOf4_2()
+        public void EvaluateGridPositionsReturnsDeltaGridOf0()
         {
-            var gridPositions = FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(-0.05,2000.3,5);
-            List<double> listOfPoints = new List<double>() { -0.05,3.95,7.95,11.95,15.95 };
-            Assert.AreEqual(5, gridPositions.Count());
-            Assert.IsTrue(gridPositions.SequenceEqual(listOfPoints));
+            Assert.ThrowsException<EvaluateGridPositionsException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(0.05,200.3,5));
         }
         [TestMethod]
         public void EvaluateGridPositionsReturnsDeltaGridOf5()
@@ -51,17 +49,17 @@ namespace FunctionGridViewTest
         [TestMethod]
         public void EvaluateGridPositionsThrowsAnExceptionForNIs0()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(-2.0,3.0,0));
+            Assert.ThrowsException<EvaluateGridPositionsException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(-2.0,3.0,0));
         }
         [TestMethod]
         public void EvaluateGridPositionsThrowsAnExceptionForNIsEqualRangeEnd()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(3.0,3.0,5));
+            Assert.ThrowsException<EvaluateGridPositionsException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(3.0,3.0,5));
         }
         [TestMethod]
         public void EvaluateGridPositionsThrowsAnExceptionForNIsLessThanRangeEnd()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(3.0,2.5,5));
+            Assert.ThrowsException<EvaluateGridPositionsException>(() => FunctionGridView.EvaluateGridPositions.EvaluateVerticalAndHorizontalGridPositions(3.0,2.5,5));
         }
     }
 }

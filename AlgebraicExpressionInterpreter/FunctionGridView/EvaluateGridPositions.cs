@@ -12,7 +12,7 @@ namespace FunctionGridView
         {
             if(n==0 || rangeStart>=rangeEnd)
             {
-                throw new InvalidOperationException("n is not valid.");
+                throw new EvaluateGridPositionsException("n is not valid.");
             }
 
             double delta = (rangeEnd - rangeStart) / n;
@@ -34,7 +34,8 @@ namespace FunctionGridView
                     factor /= 10;
                 }
             }
-           double deltaGrid = (int)(delta / factor) * factor;
+           double deltaGrid = (int)(delta *factor) / factor;
+            if (deltaGrid == 0) throw new EvaluateGridPositionsException("deltaGrid is 0.");
            double startGrid = (int)(rangeStart / factor) * factor;
 
             List<double> gridPoints = new List<double>();
