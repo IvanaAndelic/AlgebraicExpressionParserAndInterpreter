@@ -16,6 +16,13 @@ namespace GUI
     {
         Parser parser = new Parser();
         IExpression expression = null;
+        
+        //line which is currently being printed
+        int counter ;
+        //defines the page that is currently being printed
+        int curPage;
+        //declaring of the bitmap object
+        Bitmap bmp;
         public MainForm()
         {
             InitializeComponent();
@@ -99,6 +106,25 @@ namespace GUI
         {
             textBoxYMin.Enabled = !checkBoxAdjustAutomatically.Checked;
             textBoxYMax.Enabled = !checkBoxAdjustAutomatically.Checked;
+        }
+        private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+        {
+            //Before printing, set counter variables to initial value
+            counter = 0;
+            curPage = 1;
+        }
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            e.Graphics.DrawImage(bmp, 0, 0);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var dataGridView = new DataGridView();
+            bmp = new Bitmap(dataGridView.Width, dataGridView.Height);
+            dataGridView.DrawToBitmap(bmp, new Rectangle(0, 0, dataGridView.Width, dataGridView.Height));
+            printPreviewDialog1.ShowDialog();
+
         }
     }
 }
