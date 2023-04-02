@@ -10,6 +10,9 @@ using System.Windows.Forms;
 using AlgebraicExpressionParser;
 using AlgebraicExpressionInterpreter;
 using System.Globalization;
+using System.Drawing.Printing;
+using FunctionGridView;
+
 namespace GUI
 {
     public partial class MainForm : Form
@@ -18,11 +21,11 @@ namespace GUI
         IExpression expression = null;
         
         //line which is currently being printed
-        int counter ;
+       // int counter ;
         //defines the page that is currently being printed
-        int curPage;
+        //int curPage;
         //declaring of the bitmap object
-        Bitmap bmp;
+        //Bitmap bmp;
         public MainForm()
         {
             InitializeComponent();
@@ -107,24 +110,37 @@ namespace GUI
             textBoxYMin.Enabled = !checkBoxAdjustAutomatically.Checked;
             textBoxYMax.Enabled = !checkBoxAdjustAutomatically.Checked;
         }
-        private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
-        {
+       // private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
+       // {
             //Before printing, set counter variables to initial value
-            counter = 0;
-            curPage = 1;
-        }
+            //counter = 0;
+            //curPage = 1;
+        //}
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
-            e.Graphics.DrawImage(bmp, 0, 0);
+            //e.Graphics.DrawImage(bmp, 0, 0);
+            
+            var pic = functionGridView.DisplayRectangle;
+            //e.Graphics.DrawImage(pic, 0, 0);
+            
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var dataGridView = new DataGridView();
-            bmp = new Bitmap(dataGridView.Width, dataGridView.Height);
-            dataGridView.DrawToBitmap(bmp, new Rectangle(0, 0, dataGridView.Width, dataGridView.Height));
-            printPreviewDialog1.ShowDialog();
+            //var dataGridView = new DataGridView();
+            //bmp = new Bitmap(dataGridView.Width, dataGridView.Height);
+            //dataGridView.DrawToBitmap(bmp, new Rectangle(0, 0, dataGridView.Width, dataGridView.Height));
+            //printPreviewDialog1.ShowDialog();
+            PrintDocument printDocument1 = new PrintDocument();
+            printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            printDocument1.Print();
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            printPreviewDialog1.ShowDialog();
         }
     }
 }
