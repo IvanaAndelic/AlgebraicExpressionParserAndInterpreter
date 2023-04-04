@@ -78,6 +78,11 @@ namespace GUI
                 return;
             }
             //provjeriti x0>=xn; dodati messageBox
+            if (x0 >= xn)
+            {
+                MessageBox.Show("Left bound cannot be greater than left bound");
+                return;
+            }
             if (double.TryParse(textBoxYMin.Text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double yMin) == false)
             {
                 MessageBox.Show("Invalid yMin");
@@ -123,9 +128,9 @@ namespace GUI
             //var pic = functionGridView.DisplayRectangle;
             //e.Graphics.DrawImage(pic, 0, 0);
 
-            var myPicturebox = new PictureBox();
-            Bitmap myBitmap1 = new Bitmap(myPicturebox.Width, myPicturebox.Height);
-            myPicturebox.DrawToBitmap(myBitmap1, new Rectangle(0, 0, myPicturebox.Width, myPicturebox.Height));
+            //var myPicturebox = new PictureBox();
+            Bitmap myBitmap1 = new Bitmap(functionGridView.Width, functionGridView.Height);
+            functionGridView.DrawToBitmap(myBitmap1, new Rectangle(0, 0, functionGridView.Width, functionGridView.Height));
             e.Graphics.DrawImage(myBitmap1, 0, 0);
             myBitmap1.Dispose();
 
