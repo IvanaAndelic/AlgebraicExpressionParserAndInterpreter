@@ -119,11 +119,17 @@ namespace GUI
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
             //e.Graphics.DrawImage(bmp, 0, 0);
-            
-            var pic = functionGridView.DisplayRectangle;
+
+            //var pic = functionGridView.DisplayRectangle;
             //e.Graphics.DrawImage(pic, 0, 0);
-            
-            
+
+            var myPicturebox = new PictureBox();
+            Bitmap myBitmap1 = new Bitmap(myPicturebox.Width, myPicturebox.Height);
+            myPicturebox.DrawToBitmap(myBitmap1, new Rectangle(0, 0, myPicturebox.Width, myPicturebox.Height));
+            e.Graphics.DrawImage(myBitmap1, 0, 0);
+            myBitmap1.Dispose();
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -132,9 +138,20 @@ namespace GUI
             //bmp = new Bitmap(dataGridView.Width, dataGridView.Height);
             //dataGridView.DrawToBitmap(bmp, new Rectangle(0, 0, dataGridView.Width, dataGridView.Height));
             //printPreviewDialog1.ShowDialog();
+
+            //PrintDocument printDocument1 = new PrintDocument();
+           //printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            //printDocument1.Print();
+
             PrintDocument printDocument1 = new PrintDocument();
+            PrintDialog myPrinDialog1 = new PrintDialog();
             printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
-            printDocument1.Print();
+            printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
+            myPrinDialog1.Document = printDocument1;
+            if (myPrinDialog1.ShowDialog() == DialogResult.OK)
+            {
+                printDocument1.Print();
+            }
 
         }
 
