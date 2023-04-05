@@ -19,13 +19,7 @@ namespace GUI
     {
         Parser parser = new Parser();
         IExpression expression = null;
-        
-        //line which is currently being printed
-       // int counter ;
-        //defines the page that is currently being printed
-        //int curPage;
-        //declaring of the bitmap object
-        //Bitmap bmp;
+
         public MainForm()
         {
             InitializeComponent();
@@ -77,7 +71,6 @@ namespace GUI
                 MessageBox.Show("Invalid xn");
                 return;
             }
-            //provjeriti x0>=xn; dodati messageBox
             if (x0 >= xn)
             {
                 MessageBox.Show("Left bound cannot be greater than left bound");
@@ -115,23 +108,13 @@ namespace GUI
             textBoxYMin.Enabled = !checkBoxAdjustAutomatically.Checked;
             textBoxYMax.Enabled = !checkBoxAdjustAutomatically.Checked;
         }
-       // private void printDocument1_BeginPrint(object sender, System.Drawing.Printing.PrintEventArgs e)
-       // {
-            //Before printing, set counter variables to initial value
-            //counter = 0;
-            //curPage = 1;
-        //}
         private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
         {
-            //e.Graphics.DrawImage(bmp, 0, 0);
-
-            //var pic = functionGridView.DisplayRectangle;
-            //e.Graphics.DrawImage(pic, 0, 0);
-
-            //var myPicturebox = new PictureBox();
             Bitmap myBitmap1 = new Bitmap(functionGridView.Width, functionGridView.Height);
             functionGridView.DrawToBitmap(myBitmap1, new Rectangle(0, 0, functionGridView.Width, functionGridView.Height));
-            e.Graphics.DrawImage(myBitmap1, 0, 0);
+            e.Graphics.DrawImage(myBitmap1, 0, 50);
+            var font = new Font(textBoxExpression.Font.FontFamily, 20, FontStyle.Regular);
+            e.Graphics.DrawString("f(x) = "+textBoxExpression.Text, font, Brushes.Coral, 10, 10);
             myBitmap1.Dispose();
 
 
@@ -139,15 +122,6 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //var dataGridView = new DataGridView();
-            //bmp = new Bitmap(dataGridView.Width, dataGridView.Height);
-            //dataGridView.DrawToBitmap(bmp, new Rectangle(0, 0, dataGridView.Width, dataGridView.Height));
-            //printPreviewDialog1.ShowDialog();
-
-            //PrintDocument printDocument1 = new PrintDocument();
-           //printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
-            //printDocument1.Print();
-
             PrintDocument printDocument1 = new PrintDocument();
             PrintDialog myPrinDialog1 = new PrintDialog();
             printDocument1.PrintPage += new PrintPageEventHandler(printDocument1_PrintPage);
@@ -157,7 +131,6 @@ namespace GUI
             {
                 printDocument1.Print();
             }
-
         }
 
         private void button2_Click(object sender, EventArgs e)
