@@ -39,7 +39,7 @@ namespace AlgebraicExpressionParser
             LeftParenthesis,
             Minus,
 
-            Functions,
+            Function,
             Sin,
             Cos,
             Tan,
@@ -166,6 +166,7 @@ namespace AlgebraicExpressionParser
                             case ')':
                                 throw new ParserException("Unexpected right parenthesis", pos);
                             default:
+                                //process plus/minus sign
                                 switch (text[pos])
                                 {
                                     case '-':
@@ -346,7 +347,7 @@ namespace AlgebraicExpressionParser
             while (endOperators.Count > 0)
             {
                 var @operator = endOperators.Pop();
-                if (@operator > Operator.Functions)
+                if (@operator > Operator.Function)
                 {
                     var fun = functionMap[@operator];
                     lhs = new MathFunction(fun, lhs);
