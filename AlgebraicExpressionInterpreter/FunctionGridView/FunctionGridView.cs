@@ -125,7 +125,7 @@ namespace CustomControls
             int x1 = ClientRectangle.Right;
             double y = YBottom;
             double increment = m_displayBounds.Height / 5;
-            while (y <= m_displayBounds.Height)
+            while (y <= m_displayBounds.Height + YBottom)
             {
                 int yScr = ScreenY(y);
                 graphics.DrawLine(penGrid, x0, yScr, x1, yScr);

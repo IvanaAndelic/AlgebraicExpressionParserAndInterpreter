@@ -505,6 +505,10 @@ namespace AlgebraicExpressionParser
         /// <returns>New <c>ParserState</c> value.</returns>
         private ParserState GetStateAfterOperator(string text, ref int pos)
         {
+            if (pos >= text.Length)
+            {
+                throw new ParserException("Unexpected character", pos);
+            }
             if (text[pos] == '(')
             {
                 return ParserState.SkippingWhiteSpacesAfterOperator;
@@ -521,7 +525,7 @@ namespace AlgebraicExpressionParser
             string identifier = GetIdentifier(text, pos);
             if (identifier.Length > 0)
             {
-                // If identifier is folowed by parenthesis, it must be a function.
+                // If identifier is followed by parenthesis, it must be a function.
                 if (pos + identifier.Length < text.Length && text[pos + identifier.Length] == '(')
                 {
                     return ParserState.ReadingFunction;
